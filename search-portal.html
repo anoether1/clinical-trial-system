@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Search Engine Frontend</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        #searchContainer {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        #searchContainer button {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 id="OriginTitle">Search Engine</h1>
+    <h1 id="authorRankTitle" style="display: none;">Search Contact by Rank</h1>
+    <h1 id="researchTitle" style="display: none;">Search Research</h1>
+
+    <div id="searchContainer">
+        <button id="showResearchTab" onclick="showResearchTab()">Search research</button>
+        <button id="showAuthorTab" onclick="showAuthorTab()">Search contact by rank</button>
+    </div>
+
+    <div id="sArticle" style="display:none">
+        <form action="search-research.html" method="GET">
+            <input type="text" id="searchQuery" name="expr" placeholder="Type what you want to search for..." size="50">
+            <input type="text" name="min_rnk" placeholder="Minimum rank">
+            <input type="text" name="max_rnk" placeholder="Maximum rank">
+            <input type="hidden" name="fmt" value="json">
+            <button type="submit" onclick="addSearchArticleQuery()">Search</button>
+        </form>
+    </div>
+    <div id="sAuthorRank" style="display:none">
+        <form action="search-by-rank.html" method="GET">
+            <input type="text" id="searchQueryAuthor" name="exprAuthor" placeholder="Type study field" size="50">
+            <input type="hidden" name="fmt" value="json">
+            <button type="submit" onclick="addSearchAuthorQuery()">Search</button>
+        </form>
+    </div>
+    <script>
+        var OriginTitle = document.getElementById("OriginTitle");
+
+        function showResearchTab() {
+            var sResearch = document.getElementById("sArticle");
+            var sAuthorRank = document.getElementById("sAuthorRank");
+            var showResearchTab = document.getElementById("showResearchTab");
+            var showAuthorTab = document.getElementById("showAuthorTab");
+            var researchTitle = document.getElementById("researchTitle");
+            var authorRankTitle = document.getElementById("authorRankTitle");
+
+
+            if (sResearch.style.display !== 'block') {
+                sResearch.style.display = 'block';
+                sAuthorRank.style.display = 'none';
+                researchTitle.style.display = 'block';
+                authorRankTitle.style.display = 'none';
+                showResearchTab.disabled = true;
+                showAuthorTab.disabled = false;
+                OriginTitle.style.display = 'none'
+            }
+        }
+
+        function showAuthorTab() {
+            var sResearch = document.getElementById("sArticle");
+            var sAuthorRank = document.getElementById("sAuthorRank");
+            var showResearchTab = document.getElementById("showResearchTab");
+            var showAuthorTab = document.getElementById("showAuthorTab");
+            var researchTitle = document.getElementById("researchTitle");
+            var authorRankTitle = document.getElementById("authorRankTitle");
+
+            if (sAuthorRank.style.display !== 'block') {
+                sAuthorRank.style.display = 'block';
+                sResearch.style.display = 'none';
+                authorRankTitle.style.display = 'block';
+                researchTitle.style.display = 'none';
+                showAuthorTab.disabled = true;
+                showResearchTab.disabled = false;
+                OriginTitle.style.display = 'none'
+            }
+        }
+
+        function addSearchArticleQuery() {
+            var searchQuery = document.getElementById("searchQuery").value;
+            var minRank = document.querySelector("input[name='min_rnk']").value;
+            var maxRank = document.querySelector("input[name='max_rnk']").value;
+            var exprInput = document.querySelector("input[name='expr']");
+            exprInput.value = "(AREA[LocationCountry]Taiwan OR AREA[LocationCity]Taipei) AND " + searchQuery;
+            var minRankInput = document.querySelector("input[name='min_rnk']");
+            minRankInput.value = minRank;
+            var maxRankInput = document.querySelector("input[name='max_rnk']");
+            maxRankInput.value = maxRank;
+        }
+
+        function addSearchAuthorQuery() {
+            var searchQueryAuthor = document.getElementById("searchQueryAuthor").value;
+            var exprInput = document.querySelector("input[name='exprAuthor']");
+            exprInput.value = "(AREA[LocationCountry]Taiwan OR AREA[LocationCity]Taipei) AND " + searchQueryAuthor;
+        }
+    </script>
+</body>
+
+</html>

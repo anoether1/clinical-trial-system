@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Search Results</title>
+    <style>
+        table,
+        th,
+        td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        /* Add loading styles */
+        #loadingIndicator {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Search Results</h1>
+
+    <!-- Add loading indicator -->
+    <div id="loadingIndicator">
+        <p>Loading...</p>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>NCT ID</th>
+                <th>Brief Title</th>
+                <th>Condition</th>
+                <th>Location City</th>
+                <th>Investigator</th>
+            </tr>
+        </thead>
+        <tbody id="table-body">
+        </tbody>
+    </table>
+
+    <!-- Add a pop-up window to display contact details -->
+    <div id="contactPopup"
+        style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px;">
+        <h2>Contact Details</h2>
+        <p id="contactName"></p>
+        <p id="contactEmail"></p>
+        <p id="contactPhone"></p>
+        <p id="contactPhoneExt"></p>
+        <p id="contactRole"></p>
+        <p id="investigatorFullName"></p>
+        <p id="investigatorTitle"></p>
+        <p id="investigatorAffiliation"></p>
+        <p id="oldNameTitle"></p>
+        <p id="oldOrganization"></p>
+
+        <button onclick="closeContactPopup()">Close</button>
+    </div>
+
+    <script>
+        // Show loading indicator when the page is loading
+        document.addEventListener('DOMContentLoaded', function () {
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            loadingIndicator.style.display = 'block';
+        });
+
+        const searchQuery = new URLSearchParams(window.location.search).get('expr');
+        const minRank = new URLSearchParams(window.location.search).get('min_rnk');
+        const maxRank = new URLSearchParams(window.location.search).get('max_rnk');
+        // fields is too many, so we seperate
+        let fields = 'NCTId,BriefTitle,Condition,LocationCity,CentralContactName,CentralContactEMail,CentralContactPhone,CentralContactPhoneExt,CentralContactRole,';
+        fields += 'ResponsiblePartyInvestigatorFullName,ResponsiblePartyInvestigatorTitle,ResponsiblePartyInvestigatorAffiliation,ResponsiblePartyOldNameTitle,ResponsiblePartyOldOrganization'
+
+        const format = 'json';
+        // This is not production code
+        const apiUrl = `https://clinicaltrials.gov/api/query/study_fields?expr=${searchQuery}&min_rnk=${minRank}&max_rnk=${maxRank}&fields=${fields}&fmt=${format}`;
+
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                const tableBody = document.getElementById('table-body');
+
+                data.StudyFieldsResponse.StudyFields.forEach(study => {
+                    const row = document.createElement('tr');
+
+                    const rankCell = document.createElement('td');
+                    rankCell.textContent = study.Rank;
+                    row.appendChild(rankCell);
+
+                    const nctIdCell = document.createElement('td');
+                    const nctIdLink = document.createElement('a');
+                    nctIdLink.href = `https://clinicaltrials.gov/ct2/show/${study.NCTId}`;
+                    nctIdLink.textContent = study.NCTId;
+                    nctIdCell.appendChild(nctIdLink);
+                    row.appendChild(nctIdCell);
+
+                    const briefTitleCell = document.createElement('td');
+                    briefTitleCell.textContent = study.BriefTitle;
+                    row.appendChild(briefTitleCell);
+
+                    const conditionCell = document.createElement('td');
+                    conditionCell.textContent = study.Condition;
+                    row.appendChild(conditionCell);
+
+                    const locationCityCell = document.createElement('td');
+                    locationCityCell.textContent = study.LocationCity;
+                    row.appendChild(locationCityCell);
+
+                    const centralContactNameCell = document.createElement('td');
+                    centralContactNameCell.textContent = study.CentralContactName;
+                    centralContactNameCell.style.cursor = 'pointer'; // Add cursor style for click interaction
+                    centralContactNameCell.addEventListener('click', function () {
+                        displayContactPopup(study);
+                    });
+                    row.appendChild(centralContactNameCell);
+
+                    tableBody.appendChild(row);
+                });
+
+                // Hide loading indicator when the data is loaded
+                const loadingIndicator = document.getElementById('loadingIndicator');
+                loadingIndicator.style.display = 'none';
+            })
+            .catch(error => {
+                console.error(error);
+                alert('An error occurred while fetching search results. Please try again later.');
+            });
+
+        function displayContactPopup(study) {
+
+            const contactPopup = document.getElementById('contactPopup');
+            const contactName = document.getElementById('contactName');
+            const contactEmail = document.getElementById('contactEmail');
+            const contactPhone = document.getElementById('contactPhone');
+            const contactPhoneExt = document.getElementById('contactPhoneExt');
+            const contactRole = document.getElementById('contactRole');
+            const investigatorFullName = document.getElementById('investigatorFullName');
+            const investigatorTitle = document.getElementById('investigatorTitle');
+            const investigatorAffiliation = document.getElementById('investigatorAffiliation');
+            const oldNameTitle = document.getElementById('oldNameTitle');
+            const oldOrganization = document.getElementById('oldOrganization');
+
+            contactName.textContent = 'Name: ' + study.CentralContactName;
+            contactEmail.textContent = 'Email: ' + study.CentralContactEMail;
+            contactPhone.textContent = 'Phone: ' + study.CentralContactPhone;
+            contactPhoneExt.textContent = 'Phone Ext: ' + study.CentralContactPhoneExt;
+            contactRole.textContent = 'Role: ' + study.CentralContactRole;
+            investigatorFullName.textContent = 'Investigator: ' + study.ResponsiblePartyInvestigatorFullName;
+
+            investigatorTitle.textContent = 'Title: ' + study.ResponsiblePartyInvestigatorTitle;
+            investigatorAffiliation.textContent = 'Affiliation: ' + study.ResponsiblePartyInvestigatorAffiliation;
+            oldNameTitle.textContent = 'OldNameTitle: ' + study.ResponsiblePartyOldNameTitle;
+            oldOrganization.textContent = 'OldOrganization: ' + study.ResponsiblePartyOldOrganization;
+
+            contactPopup.style.display = 'block';
+        }
+
+        function closeContactPopup() {
+            const contactPopup = document.getElementById('contactPopup');
+            contactPopup.style.display = 'none';
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Search Results</title>
+    <style>
+        table,
+        th,
+        td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        /* Add loading styles */
+        #loadingIndicator {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Search Results</h1>
+
+    <!-- Add loading indicator -->
+    <div id="loadingIndicator" style="display: none;">
+        <p>Loading...</p>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Counts</th>
+                <th>Contact Name</th>
+                <th>Contact Email</th>
+                <th>Contact Phone</th>
+                <th>Contact Phone Ext</th>
+            </tr>
+        </thead>
+        <tbody id="table-body">
+        </tbody>
+    </table>
+
+    <script>
+        // 定義函式來顯示或隱藏loading指示器
+        function showLoadingIndicator() {
+            var loadingIndicator = document.getElementById("loadingIndicator");
+            loadingIndicator.style.display = "block";
+        }
+
+        function hideLoadingIndicator() {
+            var loadingIndicator = document.getElementById("loadingIndicator");
+            loadingIndicator.style.display = "none";
+        }
+        // 定義函式來組成表格
+        function createTable(data) {
+            var tableBody = document.getElementById("table-body");
+
+            // 清空表格內容
+            tableBody.innerHTML = "";
+
+            // 迭代資料並插入到表格中
+            data.forEach(function (item) {
+                var row = document.createElement("tr");
+                var countCell = document.createElement("td");
+                var countLink = document.createElement("a");
+                countLink.textContent = item[1].count;
+                countLink.href = `https://clinicaltrials.gov/ct2/results?term=${searchQuery}+${item[0]}`; // 設定超連結的URL
+                countCell.appendChild(countLink);
+                var nameCell = document.createElement("td");
+                var nameLink = document.createElement("a");
+                nameLink.textContent = item[0];
+                nameLink.href = `https://pubmed.ncbi.nlm.nih.gov/?term=${item[0]}&sort=date&ac=yes`; // 設定超連結的URL
+                nameCell.appendChild(nameLink);
+                var emailCell = document.createElement("td");
+                emailCell.textContent = item[1].ContactEMail.join(", ");
+                var phoneCell = document.createElement("td");
+                phoneCell.textContent = item[1].ContactPhone.join(", ");
+                var phoneExtCell = document.createElement("td");
+                phoneExtCell.textContent = item[1].ContactPhoneExt.join(", ");
+
+                row.appendChild(countCell);
+                row.appendChild(nameCell);
+                row.appendChild(emailCell);
+                row.appendChild(phoneCell);
+                row.appendChild(phoneExtCell);
+
+                tableBody.appendChild(row);
+            });
+        }
+
+        const searchQuery = new URLSearchParams(window.location.search).get(
+            "exprAuthor"
+        );
+
+        // 顯示loading指示器
+        showLoadingIndicator();
+
+        // 發送GET請求並處理回應
+        fetch(`http://127.0.0.1:8000/api/rank?searchQuery=${searchQuery}`)
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                // 隱藏loading指示器
+                hideLoadingIndicator();
+
+                // 呼叫函式來組成表格
+                createTable(data);
+            })
+            .catch(function (error) {
+                console.log("發生錯誤:", error);
+                // 隱藏loading指示器（如果發生錯誤）
+                hideLoadingIndicator();
+            });
+    </script>
+
+
+
+</body>
+
+</html>

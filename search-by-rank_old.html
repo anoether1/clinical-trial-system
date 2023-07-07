@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Search Results</title>
+    <style>
+        table,
+        th,
+        td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        /* Add loading styles */
+        #loadingIndicator {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Search Results</h1>
+
+    <!-- Add loading indicator -->
+    <div id="loadingIndicator">
+        <p>Loading...</p>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Counts</th>
+                <th>Central Contact Name</th>
+                <th>Central Contact Role</th>
+                <th>Central Contact Email</th>
+                <th>Central Contact Phone</th>
+                <th>Central Contact Phone Ext</th>
+                <!-- <th>Location Contact Email</th>
+                <th>Location City</th>
+                <th>Location Contact Name</th>
+                <th>Location Contact Phone</th>
+                <th>Location Contact Phone Ext</th>
+                <th>Location Contact Role</th>
+                <th>Location Facility</th>
+                <th>Responsible Party Investigator Full Name</th> -->
+            </tr>
+        </thead>
+        <tbody id="table-body">
+        </tbody>
+    </table>
+
+    <script>
+        function fetchClinicalTrials(searchQuery, name) {
+            const url = "https://clinicaltrials.gov/api/query/study_fields";
+            const params = {
+                expr: `${searchQuery} AND ${name}`,
+                fields: "",
+                min_rnk: 1,
+                max_rnk: 100,
+                fmt: "json"
+            };
+
+            return fetch(`${url}?${new URLSearchParams(params)}`)
+                .then(response => response.json())
+                .then(data => {
+                    // 請求成功後的處理程式碼
+                    const nStudiesFound = data.StudyFieldsResponse.NStudiesFound;
+                    console.log("NStudiesFound: " + nStudiesFound);
+                    return nStudiesFound;
+                })
+                .catch(error => {
+                    // 請求失敗後的處理程式碼
+                    console.log(error);
+                });
+        }
+        // Show loading indicator when the page is loading
+        document.addEventListener('DOMContentLoaded', function () {
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            loadingIndicator.style.display = 'block';
+        });
+
+        const searchQuery = new URLSearchParams(window.location.search).get('exprAuthor');
+        const fields = 'CentralContactName,CentralContactRole,CentralContactEMail,CentralContactPhone,CentralContactPhoneExt,LocationContactEMail,LocationCity,LocationContactName,LocationContactPhone,LocationContactPhoneExt,LocationContactRole,LocationFacility,ResponsiblePartyInvestigatorFullName';
+
+        const format = 'json';
+        let minRank = 1;
+        let maxRank = 1000;
+
+        const fetchData = () => {
+            const apiUrl = `https://clinicaltrials.gov/api/query/study_fields?expr=${searchQuery}&fields=${fields}&fmt=${format}&min_rnk=${minRank}&max_rnk=${maxRank}`;
+
+            fetch(apiUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error fetching data from the API');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const tableBody = document.getElementById('table-body');
+
+                    // Create an object to store the count and details of each CentralContactName
+                    const nameData = {};
+                    if (data.StudyFieldsResponse.StudyFields) {
+
+
+                        // Iterate over the data and count the occurrences of CentralContactName
+                        data.StudyFieldsResponse.StudyFields.forEach(study => {
+                            study.CentralContactName.forEach(name => {
+                                // Check if the name already exists in the object
+                                if (!nameData[name]) {
+                                    nameData[name] = {
+                                        count: 0,
+                                        role: study.CentralContactRole.join(', '),
+                                        email: study.CentralContactEMail.join(', '),
+                                        phone: study.CentralContactPhone.join(', '),
+                                        ext: study.CentralContactPhoneExt.join(', ')
+                                    };
+                                }
+
+                                // Increment the count for each name
+                                // nameData[name].count++;
+                            });
+                        });
+                        Object.keys(nameData).forEach(async key => {
+                            nameData[name].count = await fetchClinicalTrials(searchQuery, key);
+                        })
+
+                        // Sort the names based on the count in descending order
+                        const sortedNames = Object.keys(nameData).sort((a, b) => nameData[b].count - nameData[a].count);
+                        // Iterate over the sorted names and create table rows
+                        sortedNames.forEach(name => {
+                            const row = document.createElement('tr');
+
+                            // Add data cells to the row
+                            row.innerHTML = `
+                            <td><a href="https://clinicaltrials.gov/ct2/results?term=${searchQuery}+${name}">${nameData[name].count}</a></td>
+                            <td><a href="https://pubmed.ncbi.nlm.nih.gov/?term=${name}&sort=date&ac=yes">${name}</a></td>
+                            <td>${nameData[name].role}</td>
+                            <td>${nameData[name].email}</td>
+                            <td>${nameData[name].phone}</td>
+                            <td>${nameData[name].ext}</td>
+                            `;
+
+                            // Append the row to the table body
+                            tableBody.appendChild(row);
+                        });
+                    }
+                    // Check if there are more results to fetch
+                    if (maxRank < 9000 && data.StudyFieldsResponse.StudyFields) {
+                        // Update minRank and maxRank for the next batch
+                        minRank += 1000;
+                        maxRank += 1000;
+
+                        // Fetch the next batch of results
+                        fetchData();
+                    } else {
+                        // Hide loading indicator when all data is loaded
+                        const loadingIndicator = document.getElementById('loadingIndicator');
+                        loadingIndicator.style.display = 'none';
+                    }
+
+                })
+                .catch(error => {
+                    console.error(error);
+                    alert('An error occurred while fetching search results. Please try again later.');
+                });
+        };
+
+        // Start fetching the data
+        fetchData();
+    </script>
+
+
+
+</body>
+
+</html>
