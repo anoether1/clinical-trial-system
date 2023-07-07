@@ -7,7 +7,7 @@ from routes import status, fetchNih
 
 app = FastAPI(title="NIH-API", version="1.0.0")
 
-
+# This is not safe
 origins = ["*"]
 
 app.add_middleware(

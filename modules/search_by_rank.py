@@ -1,22 +1,32 @@
 import requests
 from models.nih_study_fields import NihInfoWithCountType, StudyFieldsResponseType, NihInfoType
-from multiprocessing.dummy import Pool
 from typing import Dict
-from multiprocessing import Pool
+from concurrent.futures import ThreadPoolExecutor
 
 
 class SearchNih:
-    def __init__(self, searchQuery: str, fields: str):
-        self.searchQuery = searchQuery
+    def __init__(self, search_query: str, fields: str):
+        self.searchQuery = search_query
         self.fields = fields
 
-    def search_by_rank(self, min_rnk: int, maxRank: int) -> StudyFieldsResponseType:
+    def filter_title(self, name: str):
+        symbol_to_filter = [",", ".", ";", "/"]
+        text_to_filter = ["ScD", "MD", "PhD", "MS", "MSc", "PHD", "Dr", "MSN",
+                          "PT", "Doctor", "Master", "Bachelor"]
+        for symbol in symbol_to_filter:
+            name = name.replace(symbol, "")
+
+        for title in text_to_filter:
+            name = name.replace(title, "")
+        return name.strip().capitalize()
+
+    def search_by_rank(self, min_rnk: int, max_rnk: int) -> StudyFieldsResponseType:
         params = {
             "expr": self.searchQuery,
             "fields": self.fields,
             "fmt": "json",
             "min_rnk": min_rnk,
-            "max_rnk": maxRank,
+            "max_rnk": max_rnk,
         }
         url = "https://clinicaltrials.gov/api/query/study_fields?"
         response = requests.get(url, params=params, timeout=10)
@@ -42,43 +52,48 @@ class SearchNih:
                 # calculate central contact name
                 if len(central_contact_name) > 0:
                     for name in central_contact_name:
-                        calculate_result[name] = calculate_result.get(name, {})
-                        calculate_result[name]["ContactEMail"] = (
-                            calculate_result[name]
+                        contact_name = self.filter_title(name)
+                        calculate_result[contact_name] = calculate_result.get(
+                            contact_name, {})
+                        calculate_result[contact_name]["ContactEMail"] = (
+                            calculate_result[contact_name]
                             .get("ContactEMail", set([]))
                             .union(study_field["CentralContactEMail"])
                         )
 
-                        calculate_result[name]["ContactPhone"] = (
-                            calculate_result[name]
+                        calculate_result[contact_name]["ContactPhone"] = (
+                            calculate_result[contact_name]
                             .get("ContactPhone", set([]))
                             .union(study_field["CentralContactPhone"])
                         )
 
-                        calculate_result[name]["ContactPhoneExt"] = (
-                            calculate_result[name]
+                        calculate_result[contact_name]["ContactPhoneExt"] = (
+                            calculate_result[contact_name]
                             .get("ContactPhoneExt", set([]))
                             .union(study_field["CentralContactPhoneExt"])
                         )
 
                 elif len(location_contact_name) > 0:
                     for name in location_contact_name:
-                        calculate_result[name] = calculate_result.get(name, {})
+                        contact_name = self.filter_title(name)
 
-                        calculate_result[name]["ContactEMail"] = (
-                            calculate_result[name]
+                        calculate_result[contact_name] = calculate_result.get(
+                            contact_name, {})
+
+                        calculate_result[contact_name]["ContactEMail"] = (
+                            calculate_result[contact_name]
                             .get("ContactEMail", set([]))
                             .union(study_field["LocationContactEMail"])
                         )
 
-                        calculate_result[name]["ContactPhone"] = (
-                            calculate_result[name]
+                        calculate_result[contact_name]["ContactPhone"] = (
+                            calculate_result[contact_name]
                             .get("ContactPhone", set([]))
                             .union(study_field["LocationContactPhone"])
                         )
 
-                        calculate_result[name]["ContactPhoneExt"] = (
-                            calculate_result[name]
+                        calculate_result[contact_name]["ContactPhoneExt"] = (
+                            calculate_result[contact_name]
                             .get("ContactPhoneExt", set([]))
                             .union(study_field["LocationContactPhoneExt"])
                         )
@@ -86,13 +101,27 @@ class SearchNih:
         return calculate_result
 
     def get_calculate_author(self, search_author_result: Dict[str, NihInfoType]) -> Dict[str, NihInfoWithCountType]:
-        results = Pool(4).map(self.process_author, search_author_result.keys())
-        tmp = search_author_result.copy()
-        for data in results:
-            tmp[data[0]]["count"] = data[1] # type: ignore
-        return tmp # type: ignore
 
-    def process_author(self, author):
+        results = {}
+        # Set max workers to 48
+        with ThreadPoolExecutor(max_workers=48) as executor:
+
+            # 提交任務給執行緒池
+            threads = [executor.submit(self.process_author, author)
+                       for author in search_author_result.keys()]
+
+            # 等待所有任務完成並獲取結果
+            for thread in threads:
+                # this will return author, count
+                author, count = thread.result()
+                results[author] = count
+        # 更新原始結果
+        tmp = search_author_result.copy()
+        for author, count in results.items():
+            tmp[author]["count"] = count  # type:ignore
+        return tmp  # type:ignore
+
+    def process_author(self, author: str):
         params = {
             "expr": f"{self.searchQuery} AND {author}",
             "fields": "",
