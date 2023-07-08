@@ -33,7 +33,7 @@
 </head>
 
 <body>
-    <h1>Search Results</h1>
+    <h1 id="searchTitle"></h1>
 
     <!-- Add loading indicator -->
     <div id="loadingIndicator">
@@ -74,6 +74,10 @@
     </div>
 
     <script>
+        const searchResearchInputOnly = new URLSearchParams(window.location.search).get("searchResearchInputOnly");
+        const title = document.getElementById("searchTitle");
+        title.innerHTML = `Search Results - ${searchResearchInputOnly}`;
+
         // Show loading indicator when the page is loading
         document.addEventListener('DOMContentLoaded', function () {
             const loadingIndicator = document.getElementById('loadingIndicator');
@@ -123,7 +127,20 @@
                     row.appendChild(locationCityCell);
 
                     const centralContactNameCell = document.createElement('td');
-                    centralContactNameCell.textContent = study.CentralContactName;
+                    if (study.CentralContactName.length > 0) {
+                        centralContactNameCell.textContent = study.CentralContactName;
+                    } else if (study.ResponsiblePartyInvestigatorFullName.length > 0) {
+                        centralContactNameCell.textContent = study.ResponsiblePartyInvestigatorFullName;
+                    } else if (study.ResponsiblePartyOldNameTitle.length > 0) {
+                        centralContactNameCell.textContent = study.ResponsiblePartyOldNameTitle;
+                    } else if (study.ResponsiblePartyInvestigatorAffiliation.length > 0) {
+                        centralContactNameCell.textContent = study.ResponsiblePartyInvestigatorAffiliation;
+                    } else if (study.ResponsiblePartyOldOrganization.length > 0) {
+                        centralContactNameCell.textContent = study.ResponsiblePartyOldOrganization;
+                    } else {
+                        centralContactNameCell.textContent = "default value";
+                    }
+
                     centralContactNameCell.style.cursor = 'pointer'; // Add cursor style for click interaction
                     centralContactNameCell.addEventListener('click', function () {
                         displayContactPopup(study);
@@ -161,7 +178,11 @@
             contactPhone.textContent = 'Phone: ' + study.CentralContactPhone;
             contactPhoneExt.textContent = 'Phone Ext: ' + study.CentralContactPhoneExt;
             contactRole.textContent = 'Role: ' + study.CentralContactRole;
-            investigatorFullName.textContent = 'Investigator: ' + study.ResponsiblePartyInvestigatorFullName;
+            if (study.ResponsiblePartyInvestigatorFullName.length > 0) {
+                investigatorFullName.textContent = 'Investigator: ' + study.ResponsiblePartyInvestigatorFullName;
+            } else {
+                investigatorFullName.textContent = 'Investigator: ' + study.CentralContactName
+            }
 
             investigatorTitle.textContent = 'Title: ' + study.ResponsiblePartyInvestigatorTitle;
             investigatorAffiliation.textContent = 'Affiliation: ' + study.ResponsiblePartyInvestigatorAffiliation;

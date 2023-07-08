@@ -39,6 +39,7 @@
             <input type="text" id="searchQuery" name="expr" placeholder="Type what you want to search for..." size="50">
             <input type="text" name="min_rnk" placeholder="Minimum rank">
             <input type="text" name="max_rnk" placeholder="Maximum rank">
+            <input type="text" id="searchResearchInputOnly" name="searchResearchInputOnly" hidden="true">
             <input type="hidden" name="fmt" value="json">
             <button type="submit" onclick="addSearchArticleQuery()">Search</button>
         </form>
@@ -98,11 +99,13 @@
             const minRank = document.querySelector("input[name='min_rnk']").value;
             const maxRank = document.querySelector("input[name='max_rnk']").value;
             const exprInput = document.querySelector("input[name='expr']");
+            const searchResearchInputOnly = document.querySelector("input[name='searchResearchInputOnly']");
             exprInput.value = "(AREA[LocationCountry]Taiwan OR AREA[LocationCity]Taipei) AND " + searchQuery;
             const minRankInput = document.querySelector("input[name='min_rnk']");
             minRankInput.value = minRank;
             const maxRankInput = document.querySelector("input[name='max_rnk']");
             maxRankInput.value = maxRank;
+            searchResearchInputOnly.value = searchQuery;
         }
 
         function addSearchAuthorQuery() {
