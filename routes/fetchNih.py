@@ -29,7 +29,10 @@ async def searchByRank(
     """
     Search user by rank
     """
-    fields = "CentralContactName,CentralContactRole,CentralContactEMail,CentralContactPhone,CentralContactPhoneExt,LocationContactEMail,LocationCity,LocationContactName,LocationContactPhone,LocationContactPhoneExt,LocationContactRole,LocationFacility"
+    fields = "CentralContactName,CentralContactRole,CentralContactEMail,CentralContactPhone,CentralContactPhoneExt,"
+    fields += "LocationContactEMail,LocationCity,LocationContactName,LocationContactPhone,LocationContactPhoneExt,LocationContactRole,LocationFacility,"
+    fields += "OverallOfficialName"
+
     search_nih = SearchNih(searchQuery, fields)
     # get total amount of data
     total = search_nih.search_by_rank(1, 1)["NStudiesFound"]
