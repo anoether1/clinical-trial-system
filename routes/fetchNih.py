@@ -38,8 +38,8 @@ async def searchByRank(
     total = search_nih.search_by_rank(1, 1)["NStudiesFound"]
 
     # calculate
-    calcaulate_result = search_nih.search_author_info(150)
-    # calcaulate_result = search_nih.search_author_info(total)
+    # calcaulate_result = search_nih.search_author_info(150)
+    calcaulate_result = search_nih.search_author_info(total)
 
     result = search_nih.get_calculate_author(calcaulate_result)
     # Remove dirty data
