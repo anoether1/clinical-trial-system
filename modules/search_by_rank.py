@@ -1,6 +1,6 @@
 import requests
 from models.nih_study_fields import NihInfoWithCountType, StudyFieldsResponseType, NihInfoType
-from typing import Dict
+from typing import Dict, List, Set
 from concurrent.futures import ThreadPoolExecutor
 
 
@@ -9,7 +9,7 @@ class SearchNih:
         self.searchQuery = search_query
         self.fields = fields
 
-    def filter_title(self, name: str):
+    def __filter_title(self, name: str) -> str:
         symbol_to_filter = [",", ".", ";", "/"]
         text_to_filter = ["ScD", "MD", "PhD", "MS", "MSc", "PHD", "Dr", "MSN",
                           "PT", "Doctor", "Master", "Bachelor"]
@@ -19,6 +19,16 @@ class SearchNih:
         for title in text_to_filter:
             name = name.replace(title, "")
         return name.strip().capitalize()
+
+    def author_title_handler(self, name_list: Set[str]) -> Set[str]:
+        results = set()
+        with ThreadPoolExecutor() as executor:
+            threads = [executor.submit(self.__filter_title, author)
+                       for author in name_list]
+            for thread in threads:
+                name = thread.result()
+                results.add(name)
+        return results
 
     def search_by_rank(self, min_rnk: int, max_rnk: int) -> StudyFieldsResponseType:
         params = {
@@ -47,12 +57,13 @@ class SearchNih:
                 total -= total
 
             for study_field in result["StudyFields"]:
-                central_contact_name = set(study_field["CentralContactName"])
-                location_contact_name = set(study_field["LocationContactName"])
+                # over_all_official_name = self.author_title_handler(set(study_field["OverallOfficialName"]))
+                central_contact_name = self.author_title_handler(set(study_field["CentralContactName"]))
+                location_contact_name = self.author_title_handler(set(study_field["LocationContactName"]))
                 # calculate central contact name
+                
                 if len(central_contact_name) > 0:
-                    for name in central_contact_name:
-                        contact_name = self.filter_title(name)
+                    for contact_name in central_contact_name:
                         calculate_result[contact_name] = calculate_result.get(
                             contact_name, {})
                         calculate_result[contact_name]["ContactEMail"] = (
@@ -74,8 +85,7 @@ class SearchNih:
                         )
 
                 elif len(location_contact_name) > 0:
-                    for name in location_contact_name:
-                        contact_name = self.filter_title(name)
+                    for contact_name in location_contact_name:
 
                         calculate_result[contact_name] = calculate_result.get(
                             contact_name, {})
@@ -104,7 +114,7 @@ class SearchNih:
 
         results = {}
         # Set max workers to 48
-        with ThreadPoolExecutor(max_workers=48) as executor:
+        with ThreadPoolExecutor() as executor:
 
             # 提交任務給執行緒池
             threads = [executor.submit(self.process_author, author)
@@ -127,7 +137,7 @@ class SearchNih:
             "fields": "",
             "fmt": "json",
             "min_rnk": 1,
-            "max_rnk": 15,
+            "max_rnk": 100,
         }
         url = "https://clinicaltrials.gov/api/query/study_fields?"
         response = requests.get(url, params=params, timeout=10)

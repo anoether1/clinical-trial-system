@@ -34,6 +34,7 @@
 
 <body>
     <h1 id="searchTitle"></h1>
+    <h2 id="searchQueryTitle"></h2>
 
     <!-- Add loading indicator -->
     <div id="loadingIndicator">
@@ -74,9 +75,15 @@
     </div>
 
     <script>
+        const searchQuery = new URLSearchParams(window.location.search).get('expr');
+        const minRank = new URLSearchParams(window.location.search).get('min_rnk');
+        const maxRank = new URLSearchParams(window.location.search).get('max_rnk');
         const searchResearchInputOnly = new URLSearchParams(window.location.search).get("searchResearchInputOnly");
         const title = document.getElementById("searchTitle");
+        const searchQueryTitle = document.getElementById("searchQueryTitle");
+
         title.innerHTML = `Search Results - ${searchResearchInputOnly}`;
+        searchQueryTitle.innerHTML = `Query: ${searchQuery}`;
 
         // Show loading indicator when the page is loading
         document.addEventListener('DOMContentLoaded', function () {
@@ -84,12 +91,11 @@
             loadingIndicator.style.display = 'block';
         });
 
-        const searchQuery = new URLSearchParams(window.location.search).get('expr');
-        const minRank = new URLSearchParams(window.location.search).get('min_rnk');
-        const maxRank = new URLSearchParams(window.location.search).get('max_rnk');
+
         // fields is too many, so we seperate
         let fields = 'NCTId,BriefTitle,Condition,LocationCity,CentralContactName,CentralContactEMail,CentralContactPhone,CentralContactPhoneExt,CentralContactRole,';
-        fields += 'ResponsiblePartyInvestigatorFullName,ResponsiblePartyInvestigatorTitle,ResponsiblePartyInvestigatorAffiliation,ResponsiblePartyOldNameTitle,ResponsiblePartyOldOrganization'
+        fields += 'ResponsiblePartyInvestigatorFullName,ResponsiblePartyInvestigatorTitle,ResponsiblePartyInvestigatorAffiliation,ResponsiblePartyOldNameTitle,ResponsiblePartyOldOrganization,';
+        fields += 'OverallOfficialName';
 
         const format = 'json';
         // This is not production code
@@ -127,7 +133,9 @@
                     row.appendChild(locationCityCell);
 
                     const centralContactNameCell = document.createElement('td');
-                    if (study.CentralContactName.length > 0) {
+                    if (study.OverallOfficialName.length > 0) {
+                        centralContactNameCell.textContent = study.OverallOfficialName;
+                    } else if (study.CentralContactName.length > 0) {
                         centralContactNameCell.textContent = study.CentralContactName;
                     } else if (study.ResponsiblePartyInvestigatorFullName.length > 0) {
                         centralContactNameCell.textContent = study.ResponsiblePartyInvestigatorFullName;

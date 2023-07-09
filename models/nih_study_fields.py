@@ -1,5 +1,6 @@
 from typing import TypedDict, List, Set
 
+
 class NihInfoWithCountType(TypedDict):
     ContactEMail: Set[str]
     ContactPhone: Set[str]
@@ -27,6 +28,7 @@ class StudyFieldsType(TypedDict):
     LocationContactPhoneExt: List[str]
     LocationContactRole: List[str]
     LocationFacility: List[str]
+    OverallOfficialName: List[str]
 
 
 class StudyFieldsResponseType(TypedDict):
