@@ -10,9 +10,10 @@ class SearchNih:
         self.fields = fields
 
     def __filter_title(self, name: str) -> str:
-        symbol_to_filter = [",", ".", ";", "/"]
+        symbol_to_filter = [",", ".", ";", "/", "-", "!", "?", "/", "*"]
         text_to_filter = ["ScD", "MD", "PhD", "MS", "MSc", "PHD", "Dr", "MSN",
                           "PT", "Doctor", "Master", "Bachelor"]
+
         for symbol in symbol_to_filter:
             name = name.replace(symbol, "")
 
@@ -61,7 +62,6 @@ class SearchNih:
                 central_contact_name = self.author_title_handler(set(study_field["CentralContactName"]))
                 location_contact_name = self.author_title_handler(set(study_field["LocationContactName"]))
                 # calculate central contact name
-                
                 if len(central_contact_name) > 0:
                     for contact_name in central_contact_name:
                         calculate_result[contact_name] = calculate_result.get(
