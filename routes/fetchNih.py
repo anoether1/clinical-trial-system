@@ -38,15 +38,15 @@ async def searchByRank(
     total = search_nih.search_by_rank(1, 1)["NStudiesFound"]
 
     # calculate
-    # calcaulate_result = search_nih.search_author_info(150)
-    calcaulate_result = search_nih.search_author_info(total)
+    calcaulate_result = search_nih.search_author_info(150)
+    # calcaulate_result = search_nih.search_author_info(total)
 
     result = search_nih.get_calculate_author(calcaulate_result)
 
     # Remove dirty data
     # recover the following three lines
     result.pop("C c w", None)
-    result.pop("Study Contact", None)
-    result.pop("National Taiwan University Hospital", None)
+    result.pop("Study contact", None)
+    result.pop("National taiwan university hospital", None)
     sorted_data = sorted(result.items(), key=lambda x: x[1]["count"], reverse=True)
     return sorted_data
