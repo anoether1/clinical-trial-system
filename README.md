@@ -21,3 +21,7 @@ $ git fetch --all
 $ git merge origin/main
 $ git push
 ```
+### Remove current change
+```
+$ git reset --hard
+```
