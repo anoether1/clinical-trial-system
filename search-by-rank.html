@@ -81,7 +81,7 @@
 
                 totalCount += parseInt(item[1].count);
                 countLink.textContent = item[1].count;
-                countLink.href = `https://clinicaltrials.gov/ct2/results?term=${searchQuery}+AND+${item[0]}`; // 設定超連結的URL
+                countLink.href = `https://classic.clinicaltrials.gov/ct2/results?term=${searchQuery}+AND+${item[0]}`; // 設定超連結的URL
                 countCell.appendChild(countLink);
                 const nameCell = document.createElement("td");
                 const nameLink = document.createElement("a");

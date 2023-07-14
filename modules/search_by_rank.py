@@ -142,6 +142,6 @@ class SearchNih:
             "max_rnk": 100,
         }
         url = "https://clinicaltrials.gov/api/query/study_fields?"
-        response = requests.get(url, params=params, timeout=10)
+        response = requests.get(url, params=params, timeout=30)
         response.raise_for_status()
         return (author, response.json()["StudyFieldsResponse"]["NStudiesReturned"])
