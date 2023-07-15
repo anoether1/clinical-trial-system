@@ -2,6 +2,8 @@ from fastapi import APIRouter, status, Query
 
 from typing import Dict, Union
 
+from fastapi.responses import JSONResponse
+
 from modules.search_by_rank import SearchNih
 
 responses: Dict[Union[int, str], Dict[str, str]] = {
@@ -35,7 +37,9 @@ async def searchByRank(
 
     search_nih = SearchNih(searchQuery, fields)
     # get total amount of data
-    total = search_nih.search_by_rank(1, 1)["NStudiesFound"]
+    total = search_nih.search_by_rank(1, 1).get("NStudiesFound", None)
+    if not total:
+        return JSONResponse({"message": "No study found"}, status_code=400)
 
     # calculate
     calcaulate_result = search_nih.search_author_info(150)

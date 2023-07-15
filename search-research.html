@@ -3,22 +3,32 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Search Results</title>
+    <title>Search Research</title>
     <style>
-        table,
-        th,
-        td {
-            border: 1px solid black;
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        h1,
+        h2 {
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
             border-collapse: collapse;
         }
 
         th,
         td {
             padding: 10px;
-            text-align: left;
+            border: 1px solid black;
         }
 
-        /* Add loading styles */
+        th {
+            background-color: #f2f2f2;
+        }
+
         #loadingIndicator {
             display: none;
             position: fixed;
@@ -28,6 +38,29 @@
             background-color: rgba(255, 255, 255, 0.8);
             padding: 20px;
             border-radius: 5px;
+        }
+
+        #contactPopup {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        #contactPopup h2 {
+            margin-top: 0;
+        }
+
+        #contactPopup p {
+            margin-bottom: 10px;
+        }
+
+        #contactPopup button {
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -48,7 +81,7 @@
                 <th>NCT ID</th>
                 <th>Brief Title</th>
                 <th>Condition</th>
-                <th>Location City</th>
+                <!-- <th>Location City</th> -->
                 <th>Investigator</th>
             </tr>
         </thead>
@@ -128,9 +161,9 @@
                     conditionCell.textContent = study.Condition;
                     row.appendChild(conditionCell);
 
-                    const locationCityCell = document.createElement('td');
-                    locationCityCell.textContent = study.LocationCity;
-                    row.appendChild(locationCityCell);
+                    // const locationCityCell = document.createElement('td');
+                    // locationCityCell.textContent = study.LocationCity;
+                    // row.appendChild(locationCityCell);
 
                     const centralContactNameCell = document.createElement('td');
                     if (study.OverallOfficialName.length > 0) {
@@ -146,7 +179,7 @@
                     } else if (study.ResponsiblePartyOldOrganization.length > 0) {
                         centralContactNameCell.textContent = study.ResponsiblePartyOldOrganization;
                     } else {
-                        centralContactNameCell.textContent = "default value";
+                        centralContactNameCell.textContent = "";
                     }
 
                     centralContactNameCell.style.cursor = 'pointer'; // Add cursor style for click interaction
