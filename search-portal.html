@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Search Engine Frontend</title>
+    <title>Search Portal</title>
     <style>
         body {
             display: flex;
@@ -10,6 +10,12 @@
             align-items: center;
             height: 100vh;
             flex-direction: column;
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 24px;
         }
 
         #searchContainer {
@@ -20,79 +26,221 @@
 
         #searchContainer button {
             margin-left: 10px;
+            padding: 8px 16px;
+            font-size: 16px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            outline: none;
+        }
+
+        #searchContainer button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .input-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .input-container input[type="text"] {
+            padding: 8px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .checkbox-container {
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        .checkbox-container label {
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        .checkbox-container input[type="checkbox"] {
+            margin-right: 5px;
+        }
+
+        .search-button {
+            padding: 8px 16px;
+            font-size: 16px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .search-button:hover {
+            background-color: #45a049;
+        }
+
+        .search-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
         }
     </style>
 </head>
 
 <body>
-    <h1 id="OriginTitle">Search Engine</h1>
-    <h1 id="authorRankTitle" style="display: none;">Search Contact by Rank</h1>
+    <h1 id="OriginTitle">Search Clinical Trial Portal</h1>
+    <h1 id="authorRankTitle" style="display: none;">Search Author Contact by Rank</h1>
     <h1 id="researchTitle" style="display: none;">Search Research</h1>
-
+    <h1 id="searchPhaseTitle" style="display: none;">Search Phase</h1>
+    <br>
     <div id="searchContainer">
-        <button id="showResearchTab" onclick="showResearchTab()">Search research</button>
-        <button id="showAuthorTab" onclick="showAuthorTab()">Search contact by rank</button>
+        <button id="showResearchTab" onclick="showTab('searchResearch')">Search research</button>
+        <button id="showAuthorTab" onclick="showTab('searchAuthor')">Search author contact by rank</button>
+        <button id="showPhaseTab" onclick="showTab('searchPhase')">Search Clinical Trial Phase</button>
     </div>
 
     <div id="sArticle" style="display:none">
-        <form action="search-research.html" method="GET">
-            <input type="text" id="searchQuery" name="expr" placeholder="Type what you want to search for..." size="50">
-            <input type="text" name="min_rnk" placeholder="Minimum rank">
-            <input type="text" name="max_rnk" placeholder="Maximum rank">
+        <form action="search-research.html" method="GET" autocomplete="off">
+            <div class="input-container">
+                <input type="text" id="searchQuery" name="expr" placeholder="Type what you want to search for..."
+                    size="50">
+            </div>
+            <div class="input-container">
+                <input type="text" name="min_rnk" placeholder="Minimum rank">
+                <input type="text" name="max_rnk" placeholder="Maximum rank">
+            </div>
             <input type="text" id="searchResearchInputOnly" name="searchResearchInputOnly" hidden="true">
             <input type="hidden" name="fmt" value="json">
-            <button type="submit" onclick="addSearchArticleQuery()">Search</button>
+            <button type="submit" onclick="addSearchArticleQuery()" class="search-button">Search</button>
         </form>
     </div>
     <div id="sAuthorRank" style="display:none">
-        <form action="search-by-rank.html" method="GET">
-            <input type="text" id="searchQueryAuthor" name="exprAuthor" placeholder="Type study field" size="50">
+        <form action="search-by-rank.html" method="GET" autocomplete="off">
+            <div class="input-container">
+                <input type="text" id="searchQueryAuthor" name="exprAuthor" placeholder="Type study field" size="50">
+            </div>
             <input type="text" id="queryInputOnly" name="queryInputOnly" hidden="true">
             <input type="hidden" name="fmt" value="json">
-            <button type="submit" onclick="addSearchAuthorQuery()">Search</button>
+            <button type="submit" onclick="addSearchAuthorQuery()" class="search-button">Search</button>
         </form>
     </div>
+    <div id="searchPhase" style="display:none">
+        <div class="input-container">
+            <input type="text" id="searchPhaseQuery" name="searchPhaseQuery" placeholder="Type study field" size="50">
+        </div>
+
+        <div class="checkbox-container">
+            <label>
+                <input type="checkbox" id="early-phase-1" value="0">
+                Early Phase 1
+            </label>
+
+            <label>
+                <input type="checkbox" id="phase-1" value="1">
+                Phase 1
+            </label>
+
+            <label>
+                <input type="checkbox" id="phase-2" value="2">
+                Phase 2
+            </label>
+
+            <label>
+                <input type="checkbox" id="phase-3" value="3">
+                Phase 3
+            </label>
+
+            <label>
+                <input type="checkbox" id="phase-4" value="4">
+                Phase 4
+            </label>
+
+            <label>
+                <input type="checkbox" id="not-applicable" value="NA">
+                Not Applicable
+            </label>
+        </div>
+        <br>
+        <button onclick="addSearchPhaseQuery()" class="search-button">Search</button>
+    </div>
     <script>
+
         const OriginTitle = document.getElementById("OriginTitle");
 
-        function showResearchTab() {
+        function showTab(tab) {
             const sResearch = document.getElementById("sArticle");
             const sAuthorRank = document.getElementById("sAuthorRank");
+            const sPhase = document.getElementById("searchPhase");
+
             const showResearchTab = document.getElementById("showResearchTab");
             const showAuthorTab = document.getElementById("showAuthorTab");
+            const showPhaseTab = document.getElementById("showPhaseTab");
+
             const researchTitle = document.getElementById("researchTitle");
             const authorRankTitle = document.getElementById("authorRankTitle");
+            const searchPhaseTitle = document.getElementById("searchPhaseTitle");
 
+            switch (tab) {
+                case "searchResearch":
+                    if (sResearch.style.display !== 'block') {
+                        sResearch.style.display = 'block';
+                        sAuthorRank.style.display = 'none';
+                        sPhase.style.display = 'none';
 
-            if (sResearch.style.display !== 'block') {
-                sResearch.style.display = 'block';
-                sAuthorRank.style.display = 'none';
-                researchTitle.style.display = 'block';
-                authorRankTitle.style.display = 'none';
-                showResearchTab.disabled = true;
-                showAuthorTab.disabled = false;
-                OriginTitle.style.display = 'none'
+                        researchTitle.style.display = 'block';
+                        authorRankTitle.style.display = 'none';
+                        searchPhaseTitle.style.display = 'none';
+
+                        showResearchTab.disabled = true;
+                        showAuthorTab.disabled = false;
+                        showPhaseTab.disabled = false;
+                        OriginTitle.style.display = 'none';
+                    }
+                    break;
+                case "searchAuthor":
+                    if (sAuthorRank.style.display !== 'block') {
+                        sAuthorRank.style.display = 'block';
+                        sResearch.style.display = 'none';
+                        sPhase.style.display = 'none';
+
+                        authorRankTitle.style.display = 'block';
+                        researchTitle.style.display = 'none';
+                        searchPhaseTitle.style.display = 'none';
+
+                        showAuthorTab.disabled = true;
+                        showResearchTab.disabled = false;
+                        showPhaseTab.disabled = false;
+
+                        OriginTitle.style.display = 'none';
+                    }
+                    break;
+                case "searchPhase":
+                    if (sPhase.style.display !== 'block') {
+                        sAuthorRank.style.display = 'none';
+                        sResearch.style.display = 'none';
+                        sPhase.style.display = 'block';
+
+                        authorRankTitle.style.display = 'none';
+                        researchTitle.style.display = 'none';
+                        searchPhaseTitle.style.display = 'block';
+
+                        showAuthorTab.disabled = false;
+                        showResearchTab.disabled = false;
+                        showPhaseTab.disabled = true;
+
+                        OriginTitle.style.display = 'none';
+                    }
+                    break;
+
+                default:
+                    alert("Unknown error occurred");
+                    break;
             }
         }
 
-        function showAuthorTab() {
-            const sResearch = document.getElementById("sArticle");
-            const sAuthorRank = document.getElementById("sAuthorRank");
-            const showResearchTab = document.getElementById("showResearchTab");
-            const showAuthorTab = document.getElementById("showAuthorTab");
-            const researchTitle = document.getElementById("researchTitle");
-            const authorRankTitle = document.getElementById("authorRankTitle");
-
-            if (sAuthorRank.style.display !== 'block') {
-                sAuthorRank.style.display = 'block';
-                sResearch.style.display = 'none';
-                authorRankTitle.style.display = 'block';
-                researchTitle.style.display = 'none';
-                showAuthorTab.disabled = true;
-                showResearchTab.disabled = false;
-                OriginTitle.style.display = 'none'
-            }
-        }
 
         function addSearchArticleQuery() {
             const searchQuery = document.getElementById("searchQuery").value;
@@ -114,6 +262,30 @@
             const queryInputOnly = document.querySelector("input[name='queryInputOnly']");
             exprInput.value = "(AREA[LocationCountry]Taiwan OR AREA[LocationCity]Taipei) AND " + searchQueryAuthor;
             queryInputOnly.value = searchQueryAuthor;
+        }
+
+        function addSearchPhaseQuery() {
+            let baseUrl = "https://clinicaltrials.gov/search?aggFilters=phase:";
+            const phaseQuery = document.getElementById("searchPhaseQuery").value;
+
+            const checkboxes = document.querySelectorAll('.checkbox-container input[type="checkbox"]:checked');
+
+            const values = Array.from(checkboxes).map(function (checkbox) {
+                return checkbox.value;
+            });
+            if (values.length > 0) {
+                for (let i = 0; i < values.length; i++) {
+                    if (i === 0) {
+                        baseUrl += values[i];
+                    } else {
+                        baseUrl += ` ${values[i]}`;
+                    }
+                }
+                baseUrl += `&cond=(AREA[LocationCountry]Taiwan OR AREA[LocationCity]Taipei) AND ${phaseQuery}`;
+                window.location.href = baseUrl;
+            } else {
+                alert("You must select the checkbox");
+            }
         }
     </script>
 </body>

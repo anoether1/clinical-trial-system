@@ -25,9 +25,30 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: rgba(255, 255, 255, 0.8);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
             padding: 20px;
             border-radius: 5px;
+            font-size: 20px;
+        }
+
+        h1,
+        h2 {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        #table-body tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        #table-body td a {
+            color: blue;
+            text-decoration: none;
+        }
+
+        #table-body td a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -37,11 +58,11 @@
     <h2 id="searchQueryTitle"></h2>
 
     <!-- Add loading indicator -->
-    <div id="loadingIndicator" style="display: none;">
+    <div id="loadingIndicator">
         <p>Loading...</p>
     </div>
 
-    <table>
+    <table id="resultTable" style="display: none;">
         <thead>
             <tr>
                 <th>Counts</th>
@@ -68,6 +89,7 @@
         }
         // 定義函式來組成表格
         function createTable(data) {
+            const table = document.getElementById("resultTable");
             const tableBody = document.getElementById("table-body");
             let totalCount = 0;
             // 清空表格內容
@@ -104,6 +126,7 @@
                 tableBody.appendChild(row);
             });
 
+            table.style.display = "table";
             title.innerHTML += `(${totalCount})`;
         }
 
@@ -111,6 +134,7 @@
         const queryInputOnly = new URLSearchParams(window.location.search).get("queryInputOnly");
         const title = document.getElementById("searchTitle");
         const searchQueryTitle = document.getElementById("searchQueryTitle");
+        const table = document.getElementById("resultTable");
         // 顯示loading指示器
         showLoadingIndicator();
         title.innerHTML = `Search Results - ${queryInputOnly} `;
