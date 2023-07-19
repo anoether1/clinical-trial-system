@@ -132,7 +132,7 @@
 
         const format = 'json';
         // This is not production code
-        const apiUrl = `https://clinicaltrials.gov/api/query/study_fields?expr=${searchQuery}&min_rnk=${minRank}&max_rnk=${maxRank}&fields=${fields}&fmt=${format}`;
+        const apiUrl = `https://classic.clinicaltrials.gov/api/query/study_fields?expr=${searchQuery}&min_rnk=${minRank}&max_rnk=${maxRank}&fields=${fields}&fmt=${format}`;
 
         fetch(apiUrl)
             .then(response => response.json())
