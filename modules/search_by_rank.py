@@ -39,7 +39,7 @@ class SearchNih:
             "min_rnk": min_rnk,
             "max_rnk": max_rnk,
         }
-        url = "https://clinicaltrials.gov/api/query/study_fields?"
+        url = "https://classic.clinicaltrials.gov/api/query/study_fields?"
         response = requests.get(url, params=params, timeout=10)
 
         response.raise_for_status()
@@ -141,7 +141,7 @@ class SearchNih:
             "min_rnk": 1,
             "max_rnk": 100,
         }
-        url = "https://clinicaltrials.gov/api/query/study_fields?"
+        url = "https://classic.clinicaltrials.gov/api/query/study_fields?"
         response = requests.get(url, params=params, timeout=30)
         response.raise_for_status()
         return (author, response.json()["StudyFieldsResponse"]["NStudiesReturned"])
