@@ -147,23 +147,18 @@
             })
             .then(function (data) {
                 if (data.length > 0) {
-                    // 呼叫函式來組成表格
                     createTable(data);
                 } else {
                     alert("No Study Found. Try another keyword.");
                     window.history.back();
                 }
-                // 隱藏loading指示器
-                hideLoadingIndicator();
-
-
             })
             .catch(function (error) {
-                alert(`Error: ${error}`);
                 console.error("Error: ", error);
-                // 隱藏loading指示器（如果發生錯誤）
-                hideLoadingIndicator();
+                alert(`Error: ${error}`);
+                window.history.back();
             });
+        hideLoadingIndicator();
     </script>
 
 </body>
