@@ -146,11 +146,17 @@
                 return response.json();
             })
             .then(function (data) {
+                if (data.length > 0) {
+                    // 呼叫函式來組成表格
+                    createTable(data);
+                } else {
+                    alert("No Study Found. Try another keyword.");
+                    window.history.back();
+                }
                 // 隱藏loading指示器
                 hideLoadingIndicator();
 
-                // 呼叫函式來組成表格
-                createTable(data);
+
             })
             .catch(function (error) {
                 alert(`Error: ${error}`);

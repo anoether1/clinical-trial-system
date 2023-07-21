@@ -138,58 +138,63 @@
             .then(response => response.json())
             .then(data => {
                 const tableBody = document.getElementById('table-body');
+                if (data.length > 0) {
 
-                data.StudyFieldsResponse.StudyFields.forEach(study => {
-                    const row = document.createElement('tr');
+                    data.StudyFieldsResponse.StudyFields.forEach(study => {
+                        const row = document.createElement('tr');
 
-                    const rankCell = document.createElement('td');
-                    rankCell.textContent = study.Rank;
-                    row.appendChild(rankCell);
+                        const rankCell = document.createElement('td');
+                        rankCell.textContent = study.Rank;
+                        row.appendChild(rankCell);
 
-                    const nctIdCell = document.createElement('td');
-                    const nctIdLink = document.createElement('a');
-                    nctIdLink.href = `https://clinicaltrials.gov/ct2/show/${study.NCTId}`;
-                    nctIdLink.textContent = study.NCTId;
-                    nctIdCell.appendChild(nctIdLink);
-                    row.appendChild(nctIdCell);
+                        const nctIdCell = document.createElement('td');
+                        const nctIdLink = document.createElement('a');
+                        nctIdLink.href = `https://clinicaltrials.gov/ct2/show/${study.NCTId}`;
+                        nctIdLink.textContent = study.NCTId;
+                        nctIdCell.appendChild(nctIdLink);
+                        row.appendChild(nctIdCell);
 
-                    const briefTitleCell = document.createElement('td');
-                    briefTitleCell.textContent = study.BriefTitle;
-                    row.appendChild(briefTitleCell);
+                        const briefTitleCell = document.createElement('td');
+                        briefTitleCell.textContent = study.BriefTitle;
+                        row.appendChild(briefTitleCell);
 
-                    const conditionCell = document.createElement('td');
-                    conditionCell.textContent = study.Condition;
-                    row.appendChild(conditionCell);
+                        const conditionCell = document.createElement('td');
+                        conditionCell.textContent = study.Condition;
+                        row.appendChild(conditionCell);
 
-                    // const locationCityCell = document.createElement('td');
-                    // locationCityCell.textContent = study.LocationCity;
-                    // row.appendChild(locationCityCell);
+                        // const locationCityCell = document.createElement('td');
+                        // locationCityCell.textContent = study.LocationCity;
+                        // row.appendChild(locationCityCell);
 
-                    const centralContactNameCell = document.createElement('td');
-                    if (study.OverallOfficialName.length > 0) {
-                        centralContactNameCell.textContent = study.OverallOfficialName;
-                    } else if (study.CentralContactName.length > 0) {
-                        centralContactNameCell.textContent = study.CentralContactName;
-                    } else if (study.ResponsiblePartyInvestigatorFullName.length > 0) {
-                        centralContactNameCell.textContent = study.ResponsiblePartyInvestigatorFullName;
-                    } else if (study.ResponsiblePartyOldNameTitle.length > 0) {
-                        centralContactNameCell.textContent = study.ResponsiblePartyOldNameTitle;
-                    } else if (study.ResponsiblePartyInvestigatorAffiliation.length > 0) {
-                        centralContactNameCell.textContent = study.ResponsiblePartyInvestigatorAffiliation;
-                    } else if (study.ResponsiblePartyOldOrganization.length > 0) {
-                        centralContactNameCell.textContent = study.ResponsiblePartyOldOrganization;
-                    } else {
-                        centralContactNameCell.textContent = "";
-                    }
+                        const centralContactNameCell = document.createElement('td');
+                        if (study.OverallOfficialName.length > 0) {
+                            centralContactNameCell.textContent = study.OverallOfficialName;
+                        } else if (study.CentralContactName.length > 0) {
+                            centralContactNameCell.textContent = study.CentralContactName;
+                        } else if (study.ResponsiblePartyInvestigatorFullName.length > 0) {
+                            centralContactNameCell.textContent = study.ResponsiblePartyInvestigatorFullName;
+                        } else if (study.ResponsiblePartyOldNameTitle.length > 0) {
+                            centralContactNameCell.textContent = study.ResponsiblePartyOldNameTitle;
+                        } else if (study.ResponsiblePartyInvestigatorAffiliation.length > 0) {
+                            centralContactNameCell.textContent = study.ResponsiblePartyInvestigatorAffiliation;
+                        } else if (study.ResponsiblePartyOldOrganization.length > 0) {
+                            centralContactNameCell.textContent = study.ResponsiblePartyOldOrganization;
+                        } else {
+                            centralContactNameCell.textContent = "";
+                        }
 
-                    centralContactNameCell.style.cursor = 'pointer'; // Add cursor style for click interaction
-                    centralContactNameCell.addEventListener('click', function () {
-                        displayContactPopup(study);
+                        centralContactNameCell.style.cursor = 'pointer'; // Add cursor style for click interaction
+                        centralContactNameCell.addEventListener('click', function () {
+                            displayContactPopup(study);
+                        });
+                        row.appendChild(centralContactNameCell);
+
+                        tableBody.appendChild(row);
                     });
-                    row.appendChild(centralContactNameCell);
-
-                    tableBody.appendChild(row);
-                });
+                } else {
+                    alert("No Study Found. Try another keyword.");
+                    window.history.back();
+                }
 
                 // Hide loading indicator when the data is loaded
                 const loadingIndicator = document.getElementById('loadingIndicator');
