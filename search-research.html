@@ -138,7 +138,7 @@
             .then(response => response.json())
             .then(data => {
                 const tableBody = document.getElementById('table-body');
-                if (data.length > 0) {
+                if (data.StudyFieldsResponse.NStudiesFound > 0) {
 
                     data.StudyFieldsResponse.StudyFields.forEach(study => {
                         const row = document.createElement('tr');
@@ -195,7 +195,6 @@
                     alert("No Study Found. Try another keyword.");
                     window.history.back();
                 }
-
                 // Hide loading indicator when the data is loaded
                 const loadingIndicator = document.getElementById('loadingIndicator');
                 loadingIndicator.style.display = 'none';
@@ -203,6 +202,7 @@
             .catch(error => {
                 console.error(error);
                 alert('An error occurred while fetching search results. Please try again later.');
+                window.history.back();
             });
 
         function displayContactPopup(study) {
