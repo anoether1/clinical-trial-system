@@ -139,7 +139,7 @@
             .then(data => {
                 const tableBody = document.getElementById('table-body');
                 if (data.StudyFieldsResponse.NStudiesFound > 0) {
-
+                    title.innerHTML += ` (total: ${data.StudyFieldsResponse.NStudiesFound})`;
                     data.StudyFieldsResponse.StudyFields.forEach(study => {
                         const row = document.createElement('tr');
 
