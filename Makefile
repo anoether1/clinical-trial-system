@@ -14,5 +14,5 @@ dev:
 prod:
 	docker-compose -f build/docker-compose.yml up -d
 
-build:
+image:
 	docker build --tag nih-backend:latest . -f build/Dockerfile
