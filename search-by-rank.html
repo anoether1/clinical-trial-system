@@ -153,13 +153,14 @@
                     alert("No Study Found. Try another keyword.");
                     window.history.back();
                 }
+                hideLoadingIndicator();
             })
             .catch(function (error) {
                 console.error("Error: ", error);
+                hideLoadingIndicator();
                 alert(`Error: ${error}`);
                 window.history.back();
             });
-        hideLoadingIndicator();
     </script>
 
 </body>
