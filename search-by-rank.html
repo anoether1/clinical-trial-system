@@ -139,9 +139,9 @@
         showLoadingIndicator();
         title.innerHTML = `Search Results - ${queryInputOnly} `;
         searchQueryTitle.innerHTML = `Query: ${searchQuery}`;
-
+        const apiUrl = `http://127.0.0.1:8000/api/rank?searchQuery=${searchQuery}`;
         // 發送GET請求並處理回應
-        fetch(`http://127.0.0.1:8000/api/rank?searchQuery=${searchQuery}`)
+        fetch(apiUrl)
             .then(function (response) {
                 return response.json();
             })
