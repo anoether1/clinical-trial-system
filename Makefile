@@ -6,7 +6,7 @@ test:
 	python3 -m pytest test/
 
 install:
-	pip3 install -r requirements.txt --user
+	pip3 install -r requirements.txt
 
 dev:
 	uvicorn api:app --host 0.0.0.0 --port 8000 --reload
