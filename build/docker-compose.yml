@@ -4,7 +4,7 @@ services:
     image: nih-backend:latest
     container_name: nih-backend
     ports:
-      - 8000:8000
+      - 80:8000
     restart: unless-stopped
     logging:
       driver: "json-file"

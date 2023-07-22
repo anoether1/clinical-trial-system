@@ -139,7 +139,8 @@
         showLoadingIndicator();
         title.innerHTML = `Search Results - ${queryInputOnly} `;
         searchQueryTitle.innerHTML = `Query: ${searchQuery}`;
-        const apiUrl = `http://127.0.0.1:8000/api/rank?searchQuery=${searchQuery}`;
+        // You should change this to your server ip or to dns
+        const apiUrl = `http://13.56.116.167/api/rank?searchQuery=${searchQuery}`;
         // 發送GET請求並處理回應
         fetch(apiUrl)
             .then(function (response) {
