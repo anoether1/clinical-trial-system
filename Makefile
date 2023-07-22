@@ -12,4 +12,7 @@ dev:
 	uvicorn api:app --host 0.0.0.0 --port 8000 --reload
 
 prod:
-	uvicorn api:app --host 0.0.0.0 --port 8000 --workers 4
+	docker-compose -f build/docker-compose.yml up -d
+
+build:
+	docker build --tag nih-backend:latest . -f build/Dockerfile
