@@ -139,9 +139,10 @@
         showLoadingIndicator();
         title.innerHTML = `Search Results - ${queryInputOnly} `;
         searchQueryTitle.innerHTML = `Query: ${searchQuery}`;
-
+        // You should change this to your server ip or to dns
+        const apiUrl = `http://13.56.116.167/api/rank?searchQuery=${searchQuery}`;
         // 發送GET請求並處理回應
-        fetch(`http://127.0.0.1:8000/api/rank?searchQuery=${searchQuery}`)
+        fetch(apiUrl)
             .then(function (response) {
                 return response.json();
             })
@@ -152,13 +153,14 @@
                     alert("No Study Found. Try another keyword.");
                     window.history.back();
                 }
+                hideLoadingIndicator();
             })
             .catch(function (error) {
                 console.error("Error: ", error);
+                hideLoadingIndicator();
                 alert(`Error: ${error}`);
                 window.history.back();
             });
-        hideLoadingIndicator();
     </script>
 
 </body>

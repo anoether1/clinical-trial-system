@@ -67,6 +67,16 @@
         .card a:hover {
             color: #007bff;
         }
+
+        /* Additional styles to fix the layout issue */
+        #introductionContent {
+            padding-left: 220px;
+            /* Add some left padding to make room for the sidebar */
+            padding-right: 20px;
+            /* Add right padding for better spacing */
+            margin-top: 80px;
+            /* Add top margin to prevent content overlapping with the header */
+        }
     </style>
 </head>
 
@@ -74,8 +84,8 @@
     <h1>Search Clinical Trial</h1>
 
     <div class="navbar">
-        <a href="#" onclick="showContent('service')" class="service">Service</a>
         <a href="#" onclick="showContent('introduction')">Introduction</a>
+        <a href="#" onclick="showContent('service')" class="service">Service</a>
     </div>
 
     <div id="serviceContent">
@@ -94,13 +104,27 @@
     </div>
 
     <div id="introductionContent">
-        <!-- Add your introduction content here -->
+        <div class="card">
+            <!-- Add your introduction content here -->
+            Welcome to Angela's Noether's Search Portal, a site especially designed to search for research on clinical
+            trials being conducted in Taiwan or Taiwan researchers cooperate with.
+            These searches are all directed at the US National Health Institute's (NIH) database located at
+            https://clinicaltrials.gov. (NIH) database, since it is one of the largest data bases covering clinical
+            trials
+            conducted around the world, including Taiwan.
+            Additional information about clinical trials may be found at the following sites (introduce 3 sites) The FDA
+            site is especially useful for its comprehensive list of diseases by therapeutic area, because that is a
+            field
+            name that must be completed for most searches for research on clinical trials. See the next page to enter
+            the
+            search clinical trials portal.
+        </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            document.getElementById('serviceContent').style.display = 'block';
-            document.getElementById('introductionContent').style.display = 'none';
+            document.getElementById('serviceContent').style.display = 'none';
+            document.getElementById('introductionContent').style.display = 'block';
         });
 
         function showContent(content) {

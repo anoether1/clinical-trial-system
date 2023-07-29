@@ -1,0 +1,15 @@
+version: '3'
+services:
+  backend:
+    image: nih-backend:latest
+    container_name: nih-backend
+    ports:
+      - 80:8000
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "2048m"
+        max-file: "3"
+    environment:
+      TZ: "Asia/Taipei"
