@@ -8,14 +8,15 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             flex-direction: column;
             font-family: Arial, sans-serif;
         }
 
         h1 {
-            margin: 0;
-            font-size: 24px;
+            margin: 10px 0;
+            font-size: 28px;
+            color: #333;
         }
 
         #searchContainer {
@@ -25,7 +26,7 @@
         }
 
         #searchContainer button {
-            margin-left: 10px;
+            margin: 0 5px;
             padding: 8px 16px;
             font-size: 16px;
             background-color: #4caf50;
@@ -87,7 +88,26 @@
             background-color: #ccc;
             cursor: not-allowed;
         }
+
+        #introduction {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: left;
+            max-width: 600px;
+            margin: 10px 0;
+        }
+
+        #searchContent {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: left;
+            max-width: 600px;
+            margin: 10px 0;
+        }
     </style>
+
 </head>
 
 <body>
@@ -99,9 +119,17 @@
     <div id="searchContainer">
         <button id="showResearchTab" onclick="showTab('searchResearch')">Search research</button>
         <button id="showAuthorTab" onclick="showTab('searchAuthor')">Search author contact by rank</button>
-        <button id="showPhaseTab" onclick="showTab('searchPhase')">Search Clinical Trial Phase</button>
+        <button id="showPhaseTab" onclick="showTab('searchPhase')">Search by Clinical Trial Phase</button>
     </div>
+    <div id="introduction">
+        The Search research button allows the researcher to search for research information by number of records
+        starting from the minimum rank research clinical trial to the maximum rank research clinical trial. The
+        Search author contact by rank button searches by the name of the researchers conducting the study, It
+        lists the authors sorted by number of clinical trials performed. It assigns a rank based on the number of
+        studies the researcher(s) have performed. The Search by Clinical Trial Phase button allows the user to
+        search by phase or phases of clinical trial in a given therapeutic area.
 
+    </div>
     <div id="sArticle" style="display:none">
         <form action="search-research.html" method="GET" autocomplete="off">
             <div class="input-container">
@@ -118,6 +146,14 @@
         </form>
     </div>
     <div id="sAuthorRank" style="display:none">
+        <div id="searchContent">
+            Depressing the Search author contact by rank brings up a table with five columns. Clicking on the Count link
+            results in navigating to the NIH database classic web site showing all the clinical trials performed by the
+            researcher(s). It is sorted by the number of clinical trials listed researcher(s) have done.
+            Clicking the Contact Name link navigates the user to the Pub Med site where3 the publications of the
+            selected researcher are shown. The user may find the contact information in the remaining columns. After
+            each search is necessary to clear the Type study field before beginning the next search.
+        </div>
         <form action="search-by-rank.html" method="GET" autocomplete="off">
             <div class="input-container">
                 <input type="text" id="searchQueryAuthor" name="exprAuthor" placeholder="Type study field" size="50">
@@ -128,6 +164,12 @@
         </form>
     </div>
     <div id="searchPhase" style="display:none">
+        <div id="searchContent">
+            The Search by Clinical Trial Phase button results of the clinical phase or phases results in navigating
+            to the NIH database page showing the studies done in Taiwan in the selected phase. After each search is
+            necessary to clear the Type study field before beginning the next search. After each search is necessary
+            to clear the Type study field before beginning the next search.
+        </div>
         <div class="input-container">
             <input type="text" id="searchPhaseQuery" name="searchPhaseQuery" placeholder="Type study field" size="50">
         </div>
@@ -164,6 +206,7 @@
             </label>
         </div>
         <br>
+
         <button onclick="addSearchPhaseQuery()" class="search-button">Search</button>
     </div>
     <script>
@@ -182,6 +225,8 @@
             const researchTitle = document.getElementById("researchTitle");
             const authorRankTitle = document.getElementById("authorRankTitle");
             const searchPhaseTitle = document.getElementById("searchPhaseTitle");
+            const introduction = document.getElementById("introduction");
+            introduction.style.display = 'none';
 
             switch (tab) {
                 case "searchResearch":
