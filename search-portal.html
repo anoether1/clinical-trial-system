@@ -299,7 +299,7 @@
             const maxRank = document.querySelector("input[name='max_rnk']").value;
             const exprInput = document.querySelector("input[name='expr']");
             const searchResearchInputOnly = document.querySelector("input[name='searchResearchInputOnly']");
-            exprInput.value = "(AREA[LocationCountry]Taiwan OR AREA[LocationCity]Taipei) AND " + searchQuery;
+            exprInput.value = "AREA[LocationCountry]Taiwan AND " + searchQuery;
             const minRankInput = document.querySelector("input[name='min_rnk']");
             minRankInput.value = minRank;
             const maxRankInput = document.querySelector("input[name='max_rnk']");
@@ -311,7 +311,7 @@
             const searchQueryAuthor = document.getElementById("searchQueryAuthor").value;
             const exprInput = document.querySelector("input[name='exprAuthor']");
             const queryInputOnly = document.querySelector("input[name='queryInputOnly']");
-            exprInput.value = "(AREA[LocationCountry]Taiwan OR AREA[LocationCity]Taipei) AND " + searchQueryAuthor;
+            exprInput.value = "AREA[LocationCountry]Taiwan AND " + searchQueryAuthor;
             queryInputOnly.value = searchQueryAuthor;
         }
 
@@ -332,7 +332,7 @@
                         baseUrl += ` ${values[i]}`;
                     }
                 }
-                baseUrl += `&cond=(AREA[LocationCountry]Taiwan OR AREA[LocationCity]Taipei) AND ${phaseQuery}`;
+                baseUrl += `&cond=AREA[LocationCountry]Taiwan AND ${phaseQuery}`;
                 window.location.href = baseUrl;
             } else {
                 alert("You must select the checkbox");

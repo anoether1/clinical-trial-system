@@ -25,7 +25,7 @@ router = APIRouter()
 async def searchByRank(
     searchQuery: str = Query(
         description="Input search query and get nih info",
-        example="(AREA[LocationCity]Taiwan OR AREA[LocationCity]Taipei) AND stroke",
+        example="AREA[LocationCity]Taiwan AND stroke",
     ),
 ):
     """
