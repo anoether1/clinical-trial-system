@@ -25,7 +25,7 @@ router = APIRouter()
 async def searchByRank(
     searchQuery: str = Query(
         description="Input search query and get nih info",
-        example="AREA[LocationCity]Taiwan AND stroke",
+        example="(AREA[LocationCountry]Taiwan OR AREA[LocationCity]Taipei) AND stroke",
     ),
 ):
     """
@@ -52,5 +52,6 @@ async def searchByRank(
     result.pop("C c w", None)
     result.pop("Study contact", None)
     result.pop("National taiwan university hospital", None)
-    sorted_data = sorted(result.items(), key=lambda x: x[1]["count"], reverse=True)
+    sorted_data = sorted(
+        result.items(), key=lambda x: x[1]["count"], reverse=True)
     return sorted_data

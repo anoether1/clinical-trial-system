@@ -117,7 +117,7 @@
     <h1 id="searchPhaseTitle" style="display: none;">Search Phase</h1>
     <br>
     <div id="searchContainer">
-        <button id="showResearchTab" onclick="showTab('searchResearch')">Search research</button>
+        <button id="showResearchTab" onclick="showTab('searchResearch')" style="display: none;">Search research</button>
         <button id="showAuthorTab" onclick="showTab('searchAuthor')">Search author contact by rank</button>
         <button id="showPhaseTab" onclick="showTab('searchPhase')" style="display: none;">Search by Clinical Trial
             Phase</button>
@@ -300,7 +300,7 @@
             const maxRank = document.querySelector("input[name='max_rnk']").value;
             const exprInput = document.querySelector("input[name='expr']");
             const searchResearchInputOnly = document.querySelector("input[name='searchResearchInputOnly']");
-            exprInput.value = "AREA[LocationCountry]Taiwan AND " + searchQuery;
+            exprInput.value = "(AREA[LocationCountry]Taiwan OR AREA[LocationCity]Taipei) AND " + searchQuery;
             const minRankInput = document.querySelector("input[name='min_rnk']");
             minRankInput.value = minRank;
             const maxRankInput = document.querySelector("input[name='max_rnk']");
@@ -312,7 +312,7 @@
             const searchQueryAuthor = document.getElementById("searchQueryAuthor").value;
             const exprInput = document.querySelector("input[name='exprAuthor']");
             const queryInputOnly = document.querySelector("input[name='queryInputOnly']");
-            exprInput.value = "AREA[LocationCountry]Taiwan AND " + searchQueryAuthor;
+            exprInput.value = "(AREA[LocationCountry]Taiwan OR AREA[LocationCity]Taipei) AND " + searchQueryAuthor;
             queryInputOnly.value = searchQueryAuthor;
         }
 
@@ -333,7 +333,7 @@
                         baseUrl += ` ${values[i]}`;
                     }
                 }
-                baseUrl += `&cond=AREA[LocationCountry]Taiwan AND ${phaseQuery}`;
+                baseUrl += `&cond=(AREA[LocationCountry]Taiwan OR AREA[LocationCity]Taipei) AND ${phaseQuery}`;
                 window.location.href = baseUrl;
             } else {
                 alert("You must select the checkbox");
