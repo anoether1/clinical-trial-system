@@ -24,12 +24,10 @@
             top: 0;
             left: 0;
             padding-top: 50px;
-            /* Adjust the padding-top value */
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
-            /* Change justify-content property */
         }
 
         .navbar a {
@@ -40,11 +38,11 @@
             text-decoration: none;
             font-size: 18px;
             margin-bottom: 10px;
+            transition: background-color 0.3s, margin-bottom 0.3s;
         }
 
         .navbar a.service {
             margin-bottom: 0;
-            /* Remove the bottom margin for the "Service" item */
         }
 
         #serviceContent {
@@ -53,29 +51,35 @@
         }
 
         .card {
-            background-color: #f2f2f2;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 10px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
 
         .card a {
-            color: #333;
+            color: #007bff;
             text-decoration: none;
+            transition: color 0.3s;
         }
 
         .card a:hover {
-            color: #007bff;
+            text-decoration: underline;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
         }
 
         /* Additional styles to fix the layout issue */
         #introductionContent {
             padding-left: 220px;
-            /* Add some left padding to make room for the sidebar */
             padding-right: 20px;
-            /* Add right padding for better spacing */
             margin-top: 80px;
-            /* Add top margin to prevent content overlapping with the header */
         }
     </style>
 </head>
@@ -84,8 +88,28 @@
     <h1>Search Clinical Trial</h1>
 
     <div class="navbar">
-        <a href="#" onclick="showContent('introduction')">Introduction</a>
         <a href="#" onclick="showContent('service')" class="service">Service</a>
+    </div>
+    <div id="introductionContent">
+        <div class="card" style="padding: 30px; background-color: #E6F1F6; color: #1E4770;">
+            <h2 style="font-size: 24px; margin-bottom: 10px;">Introduction</h2>
+            <p style="font-size: 18px;">
+                Welcome to Taiwan Clinical Trials Portal. Here you can search for all clinical trials that are being or
+                have been conducted in Taiwan or by Taiwan researchers. The Search author contact by rank button
+                searches by the name of the researchers conducting the study, it lists the authors sorted by number of
+                clinical trials performed. It assigns a rank based on the number of studies the researcher(s) have
+                performed.
+            </p>
+        </div>
+        <br>
+        <div class="card" style="padding: 30px; background-color: #E6F1F6; color: #1E4770;">
+            <h2 style="font-size: 24px; margin-bottom: 10px;">Get Started</h2>
+            <p style="font-size: 18px;">
+                To use the site, you first have to select a condition (or disease name). Valid names can be found at
+                CDISC, EMA,
+                or FDA sites.
+            </p>
+        </div>
     </div>
 
     <div id="serviceContent">
@@ -105,7 +129,7 @@
             <br>
             <div>
                 The European Medicines Agency (EMA) protects and promotes human and animal health by evaluating and
-                monitoring medicines within the European Union (EU) and the European Economic Area (EEA)
+                monitoring medicines within the European Union (EU) and the European Economic Area (EEA).
             </div>
         </div>
         <div class="card">
@@ -114,7 +138,7 @@
             <br>
             <div>
                 The Food and Drug Administration (FDA) is responsible for protecting the public health by assuring the
-                safety, efficacy, and security of human and veterinary drugs, biological products, medical devices, our
+                safety, efficacy, and security of human and veterinary drugs, biological products, medical devices, the
                 nation's food supply, cosmetics, and products that emit radiation.
             </div>
         </div>
@@ -126,65 +150,6 @@
             </div>
         </div>
     </div>
-    </div>
-
-    <div id="introductionContent">
-        <div class="card">
-            <div>
-                Welcome to Angela's Noether's Search Portal, a site especially designed to search for research on
-                clinical trials being conducted in Taiwan or Taiwan researchers cooperate with.
-                These searches are all directed at the US National Health Institute's (NIH) database.
-                The NIH database is one of the largest databases covering clinical trials conducted around the world,
-                including Taiwan. Software searches for clinical trials usually require the user to insert a therapeutic
-                area. A comprehensive list of therapeutic areas may be found by browsing the following sites:
-            </div>
-            <div class="card">
-                <ul>
-                    <li>
-                        The Clinical Data Interchange Standards Consortium (CDISC) webpage
-                    </li>
-                    <li>
-                        The European Medicines Agency (EMA) website
-                    </li>
-                    <li>
-                        The Food and Drug Administration (FDA) web site
-                    </li>
-                </ul>
-            </div>
-            <div class="card">
-                For people living in Taiwan or researching Taiwan Clinical Trial studies, it is important to have
-                dedicated search filter that brings back all studies being done on Taiwan. Also, I have built additional
-                searches on my web page The "Search Portal" button brings up a web page that is completely dedicated to
-                exclusively searching studies going on in Taiwan. On the left hand side please click on the "Service"
-                button to continue to the next page: This page introduces four buttons: the CDSIC button introduces
-                therapeutic areas listed on the CDSIC web site, EMA button introduces the therapeutic areas listed on
-                the EMA web site, FDA button introduces therapeutic areas listed on the FDA site. Search Portal button
-                brings the user to three customized searches, the Search research button allows the user to search the
-                NIH database site by therapeutic area. The second button allows the user to search by name of the
-                researcher; it is sorted by the number of clinical trials the researcher(s) have performed.
-
-                The Search by Clinical Trial Phase button allows the user to search by phase or phases of clinical
-                trials in the selected therapeutic area.
-            </div>
-        </div>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            document.getElementById('serviceContent').style.display = 'none';
-            document.getElementById('introductionContent').style.display = 'block';
-        });
-
-        function showContent(content) {
-            if (content === 'service') {
-                document.getElementById('serviceContent').style.display = 'block';
-                document.getElementById('introductionContent').style.display = 'none';
-            } else if (content === 'introduction') {
-                document.getElementById('serviceContent').style.display = 'none';
-                document.getElementById('introductionContent').style.display = 'block';
-            }
-        }
-    </script>
 </body>
 
 </html>

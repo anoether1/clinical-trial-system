@@ -26,17 +26,23 @@
         }
 
         #searchContainer button {
-            margin: 0 5px;
-            padding: 8px 16px;
+            padding: 10px 20px;
+            margin: 0 10px;
             font-size: 16px;
-            background-color: #4caf50;
-            color: white;
             border: none;
+            border-radius: 5px;
             cursor: pointer;
-            outline: none;
+            background-color: #007bff;
+            color: #fff;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        #searchContainer button:hover {
+            background-color: #0056b3;
         }
 
         #searchContainer button:disabled {
+            opacity: 0.7;
             background-color: #ccc;
             cursor: not-allowed;
         }
@@ -70,23 +76,18 @@
         }
 
         .search-button {
-            padding: 8px 16px;
+            padding: 10px 20px;
             font-size: 16px;
-            background-color: #4caf50;
-            color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             cursor: pointer;
-            outline: none;
+            background-color: #007bff;
+            color: #fff;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         .search-button:hover {
-            background-color: #45a049;
-        }
-
-        .search-button:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
+            background-color: #0056b3;
         }
 
         #introduction {
@@ -100,67 +101,63 @@
 
         #searchContent {
             background-color: #f9f9f9;
-            padding: 10px;
-            border-radius: 4px;
+            padding: 20px;
+            border-radius: 8px;
             text-align: left;
-            max-width: 600px;
-            margin: 10px 0;
+            max-width: 800px;
+            margin: 20px auto;
+            line-height: 1.6;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+        }
+
+        #searchInstructions {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: left;
+            margin-top: 20px;
+            line-height: 1.6;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
     </style>
 
 </head>
 
 <body>
-    <h1 id="OriginTitle">Search Clinical Trial Portal</h1>
+    <h1 id="OriginTitle">Taiwan Clinical Trial Portal</h1>
     <h1 id="authorRankTitle" style="display: none;">Search Author Contact by Rank</h1>
-    <h1 id="researchTitle" style="display: none;">Search Research</h1>
-    <h1 id="searchPhaseTitle" style="display: none;">Search Phase</h1>
     <br>
     <div id="searchContainer">
-        <button id="showResearchTab" onclick="showTab('searchResearch')">Search research</button>
         <button id="showAuthorTab" onclick="showTab('searchAuthor')">Search author contact by rank</button>
-        <button id="showPhaseTab" onclick="showTab('searchPhase')" style="display: none;">Search by Clinical Trial
-            Phase</button>
     </div>
-    <div id="introduction">
-        The Search research button allows the researcher to search for research information by number of records
-        starting from the minimum rank research clinical trial to the maximum rank research clinical trial. The
-        Search author contact by rank button searches by the name of the researchers conducting the study, It
-        lists the authors sorted by number of clinical trials performed. It assigns a rank based on the number of
-        studies the researcher(s) have performed. The Search by Clinical Trial Phase button allows the user to
-        search by phase or phases of clinical trial in a given therapeutic area.
 
-    </div>
-    <div id="sArticle" style="display:none">
-        <div id="searchContent">
-            This page requires the user to enter a therapeutic area and a starting rank and ending rank, and then hit
-            the search button e.g. renal disease in the "Type what you want to search for" box, 1 in the Minimum rank
-            box and 10 in the Maximum rank box then hit Search. The results will be a list of records of clinical trial
-            studies. After each search is necessary to clear the Type study field before beginning the next search.
-        </div>
-        <form action="search-research.html" method="GET" autocomplete="off">
-            <div class="input-container">
-                <input type="text" id="searchQuery" name="expr" placeholder="Type what you want to search for..."
-                    size="50">
-            </div>
-            <div class="input-container">
-                <input type="text" name="min_rnk" placeholder="Minimum rank">
-                <input type="text" name="max_rnk" placeholder="Maximum rank">
-            </div>
-            <input type="text" id="searchResearchInputOnly" name="searchResearchInputOnly" hidden="true">
-            <input type="hidden" name="fmt" value="json">
-            <button type="submit" onclick="addSearchArticleQuery()" class="search-button">Search</button>
-        </form>
+    <br>
+    <div id="introduction">
+        Press the button on top of this page to get started!
     </div>
     <div id="sAuthorRank" style="display:none">
         <div id="searchContent">
-            Depressing the Search author contact by rank brings up a table with five columns. Clicking on the Count link
-            results in navigating to the NIH database classic web site showing all the clinical trials performed by the
-            researcher(s). It is sorted by the number of clinical trials listed researcher(s) have done.
-            Clicking the Contact Name link navigates the user to the Pub Med site where3 the publications of the
-            selected researcher are shown. The user may find the contact information in the remaining columns. After
-            each search is necessary to clear the Type study field before beginning the next search.
+            Depressing the Search author contact by rank bring up a table with five columns . Clicking on the Count link
+            results in navigating to the NIH clinical trials database classic web site showing all the clinical trials
+            performed by the researcher(s). It is sorted by the number of clinical trials listed researcher(s) have
+            done. Clicking the Contact Name link navigates the user to the Pub Med site where the publications of the
+            selected researcher are shown. The user may find the contact information in the remaining columns. When the
+            user clicks on the Search research button will navigate user to a separate table showing Rank, NCT ID, Brief
+            Title, Condition and Investigator at the top of the table will be the number of records found in the NIH
+            clinical trial data base for that specific disease, the API query interface will also be shown. Once the
+            separate table is displayed the user can click on the NCT ID to navigate to the NIH clinical trial database
+            the specific record for that NCT ID will appear. Clicking on individual Investigator, the contact
+            information will be displayed in a pop up window. After each search is necessary to clear the Type study
+            field before beginning the next search.
         </div>
+        <div id="searchInstructions" style="padding: 30px; background-color: #E6F1F6; color: #1E4770;">
+            <strong>
+                Fill in the Type study field and then press the Search button to initiate the search.
+            </strong>
+        </div>
+        <br>
+
         <form action="search-by-rank.html" method="GET" autocomplete="off">
             <div class="input-container">
                 <input type="text" id="searchQueryAuthor" name="exprAuthor" placeholder="Type study field" size="50">
@@ -169,144 +166,24 @@
             <input type="hidden" name="fmt" value="json">
             <button type="submit" onclick="addSearchAuthorQuery()" class="search-button">Search</button>
         </form>
-    </div>
-    <div id="searchPhase" style="display:none">
-        <div id="searchContent">
-            The Search by Clinical Trial Phase button results of the clinical phase or phases results in navigating
-            to the NIH database page showing the studies done in Taiwan in the selected phase. After each search is
-            necessary to clear the Type study field before beginning the next search. After each search is necessary
-            to clear the Type study field before beginning the next search.
-        </div>
-        <div class="input-container">
-            <input type="text" id="searchPhaseQuery" name="searchPhaseQuery" placeholder="Type study field" size="50">
-        </div>
 
-        <div class="checkbox-container">
-            <label>
-                <input type="checkbox" id="early-phase-1" value="0">
-                Early Phase 1
-            </label>
-
-            <label>
-                <input type="checkbox" id="phase-1" value="1">
-                Phase 1
-            </label>
-
-            <label>
-                <input type="checkbox" id="phase-2" value="2">
-                Phase 2
-            </label>
-
-            <label>
-                <input type="checkbox" id="phase-3" value="3">
-                Phase 3
-            </label>
-
-            <label>
-                <input type="checkbox" id="phase-4" value="4">
-                Phase 4
-            </label>
-
-            <label>
-                <input type="checkbox" id="not-applicable" value="NA">
-                Not Applicable
-            </label>
-        </div>
-        <br>
-
-        <button onclick="addSearchPhaseQuery()" class="search-button">Search</button>
     </div>
     <script>
-
         const OriginTitle = document.getElementById("OriginTitle");
 
         function showTab(tab) {
-            const sResearch = document.getElementById("sArticle");
             const sAuthorRank = document.getElementById("sAuthorRank");
-            const sPhase = document.getElementById("searchPhase");
-
-            const showResearchTab = document.getElementById("showResearchTab");
             const showAuthorTab = document.getElementById("showAuthorTab");
-            const showPhaseTab = document.getElementById("showPhaseTab");
-
-            const researchTitle = document.getElementById("researchTitle");
             const authorRankTitle = document.getElementById("authorRankTitle");
-            const searchPhaseTitle = document.getElementById("searchPhaseTitle");
             const introduction = document.getElementById("introduction");
+
             introduction.style.display = 'none';
-
-            switch (tab) {
-                case "searchResearch":
-                    if (sResearch.style.display !== 'block') {
-                        sResearch.style.display = 'block';
-                        sAuthorRank.style.display = 'none';
-                        sPhase.style.display = 'none';
-
-                        researchTitle.style.display = 'block';
-                        authorRankTitle.style.display = 'none';
-                        searchPhaseTitle.style.display = 'none';
-
-                        showResearchTab.disabled = true;
-                        showAuthorTab.disabled = false;
-                        showPhaseTab.disabled = false;
-                        OriginTitle.style.display = 'none';
-                    }
-                    break;
-                case "searchAuthor":
-                    if (sAuthorRank.style.display !== 'block') {
-                        sAuthorRank.style.display = 'block';
-                        sResearch.style.display = 'none';
-                        sPhase.style.display = 'none';
-
-                        authorRankTitle.style.display = 'block';
-                        researchTitle.style.display = 'none';
-                        searchPhaseTitle.style.display = 'none';
-
-                        showAuthorTab.disabled = true;
-                        showResearchTab.disabled = false;
-                        showPhaseTab.disabled = false;
-
-                        OriginTitle.style.display = 'none';
-                    }
-                    break;
-                case "searchPhase":
-                    if (sPhase.style.display !== 'block') {
-                        sAuthorRank.style.display = 'none';
-                        sResearch.style.display = 'none';
-                        sPhase.style.display = 'block';
-
-                        authorRankTitle.style.display = 'none';
-                        researchTitle.style.display = 'none';
-                        searchPhaseTitle.style.display = 'block';
-
-                        showAuthorTab.disabled = false;
-                        showResearchTab.disabled = false;
-                        showPhaseTab.disabled = true;
-
-                        OriginTitle.style.display = 'none';
-                    }
-                    break;
-
-                default:
-                    alert("Unknown error occurred");
-                    break;
-            }
+            sAuthorRank.style.display = 'block';
+            authorRankTitle.style.display = 'block';
+            showAuthorTab.style.display = 'none';
+            OriginTitle.style.display = 'none';
         }
 
-
-        function addSearchArticleQuery() {
-            const searchQuery = document.getElementById("searchQuery").value;
-            const minRank = document.querySelector("input[name='min_rnk']").value;
-            const maxRank = document.querySelector("input[name='max_rnk']").value;
-            const exprInput = document.querySelector("input[name='expr']");
-            const searchResearchInputOnly = document.querySelector("input[name='searchResearchInputOnly']");
-            exprInput.value = "(AREA[LocationCountry]Taiwan OR AREA[LocationCity]Taipei) AND " + searchQuery;
-            const minRankInput = document.querySelector("input[name='min_rnk']");
-            minRankInput.value = minRank;
-            const maxRankInput = document.querySelector("input[name='max_rnk']");
-            maxRankInput.value = maxRank;
-            searchResearchInputOnly.value = searchQuery;
-        }
 
         function addSearchAuthorQuery() {
             const searchQueryAuthor = document.getElementById("searchQueryAuthor").value;
@@ -314,30 +191,6 @@
             const queryInputOnly = document.querySelector("input[name='queryInputOnly']");
             exprInput.value = "(AREA[LocationCountry]Taiwan OR AREA[LocationCity]Taipei) AND " + searchQueryAuthor;
             queryInputOnly.value = searchQueryAuthor;
-        }
-
-        function addSearchPhaseQuery() {
-            let baseUrl = "https://clinicaltrials.gov/search?aggFilters=phase:";
-            const phaseQuery = document.getElementById("searchPhaseQuery").value;
-
-            const checkboxes = document.querySelectorAll('.checkbox-container input[type="checkbox"]:checked');
-
-            const values = Array.from(checkboxes).map(function (checkbox) {
-                return checkbox.value;
-            });
-            if (values.length > 0) {
-                for (let i = 0; i < values.length; i++) {
-                    if (i === 0) {
-                        baseUrl += values[i];
-                    } else {
-                        baseUrl += ` ${values[i]}`;
-                    }
-                }
-                baseUrl += `&cond=(AREA[LocationCountry]Taiwan OR AREA[LocationCity]Taipei) AND ${phaseQuery}`;
-                window.location.href = baseUrl;
-            } else {
-                alert("You must select the checkbox");
-            }
         }
     </script>
 </body>

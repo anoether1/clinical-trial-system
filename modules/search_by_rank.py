@@ -1,5 +1,5 @@
 import requests
-from models.nih_study_fields import NihInfoWithCountType, StudyFieldsResponseType, NihInfoType
+from models.nih_study_fields import NihInfoWithCountType, ResearchInfoType, StudyFieldsResponseType, NihInfoType
 from typing import Dict, List, Set
 from concurrent.futures import ThreadPoolExecutor
 
@@ -30,6 +30,19 @@ class SearchNih:
                 name = thread.result()
                 results.add(name)
         return results
+
+    def search_all_researchs(self, total: int) -> List[ResearchInfoType]:
+        output = []
+        while total > 0:
+            if total >= 1000:
+                result = self.search_by_rank(total - 1000, total)
+                total -= 1000
+            else:
+                result = self.search_by_rank(1, total)
+                total -= total
+            for study_field in result["StudyFields"]:
+                output.append(study_field)
+        return output
 
     def search_by_rank(self, min_rnk: int, max_rnk: int) -> StudyFieldsResponseType:
         params = {
