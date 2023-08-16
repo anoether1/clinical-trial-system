@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from routes import status, fetchNih
 
 app = FastAPI(
-    title="NIH-API", version="2.0.0", docs_url=None, redoc_url=None
+    title="NIH-API", version="2.0.0", #docs_url=None, redoc_url=None
 )
 
 # This is not safe

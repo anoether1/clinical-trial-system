@@ -31,14 +31,17 @@ async def search_all_research(
     """
     Search All
     """
-    fields = 'NCTId,BriefTitle,Condition'
+    fields = 'NCTId,BriefTitle,Condition,CentralContactName,CentralContactEMail,CentralContactPhone,CentralContactPhoneExt,CentralContactRole,'
+    fields += 'ResponsiblePartyInvestigatorFullName,ResponsiblePartyInvestigatorTitle,ResponsiblePartyInvestigatorAffiliation,ResponsiblePartyOldNameTitle,ResponsiblePartyOldOrganization,'
+    fields += 'OverallOfficialName'
+
     search_nih = SearchNih(searchQuery, fields)
     # get total amount of data
     total = search_nih.search_by_rank(1, 1).get("NStudiesFound", None)
     if not total:
         return JSONResponse({"message": "No study found"}, status_code=400)
     output = search_nih.search_all_researchs(total)
-    return {"data": output, "total": total}
+    return {"data": output, "total": len(output)}
 
 
 @router.get(
