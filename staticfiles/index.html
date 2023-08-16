@@ -2,93 +2,56 @@
 <html>
 
 <head>
-    <title>Search Clinical Trial Engine</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Portal</title>
+    <link rel="stylesheet" href="styles.css">
 
-        h1 {
-            text-align: center;
-            padding: 20px 0;
-        }
-
-        .navbar {
-            background-color: #333;
-            overflow: hidden;
-            height: 100vh;
-            width: 200px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            padding-top: 50px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-        }
-
-        .navbar a {
-            display: block;
-            color: #fff;
-            text-align: center;
-            padding: 14px 16px;
-            text-decoration: none;
-            font-size: 18px;
-            margin-bottom: 10px;
-            transition: background-color 0.3s, margin-bottom 0.3s;
-        }
-
-        .navbar a.service {
-            margin-bottom: 0;
-        }
-
-        #serviceContent {
-            margin-left: 200px;
-            padding: 20px;
-        }
-
-        .card {
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin-bottom: 20px;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .card a {
-            color: #007bff;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .card a:hover {
-            text-decoration: underline;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Additional styles to fix the layout issue */
-        #introductionContent {
-            padding-left: 220px;
-            padding-right: 20px;
-            margin-top: 80px;
-        }
-    </style>
 </head>
 
 <body>
-    <h1>Search Clinical Trial</h1>
+    <h1 id="OriginTitle">Taiwan Clinical Trial Portal</h1>
+    <h1 id="authorRankTitle" style="display: none;">Search Author Contact by Rank</h1>
+    <br>
+    <div id="searchContainer">
+        <button id="showAuthorTab" onclick="showTab('searchAuthor')">Search author contact by rank</button>
+    </div>
 
-    <div class="navbar">
-        <a href="#" onclick="showContent('service')" class="service">Service</a>
+    <br>
+    <div id="introduction">
+        Press the button on top of this page to get started!
+    </div>
+    <div id="sAuthorRank" style="display:none">
+        <div id="searchContent">
+            Depressing the Search author contact by rank bring up a table with five columns . Clicking on the Count link
+            results in navigating to the NIH clinical trials database classic web site showing all the clinical trials
+            performed by the researcher(s). It is sorted by the number of clinical trials listed researcher(s) have
+            done. Clicking the Contact Name link navigates the user to the Pub Med site where the publications of the
+            selected researcher are shown. The user may find the contact information in the remaining columns. When the
+            user clicks on the Search research button will navigate user to a separate table showing Rank, NCT ID, Brief
+            Title, Condition and Investigator at the top of the table will be the number of records found in the NIH
+            clinical trial data base for that specific disease, the API query interface will also be shown. Once the
+            separate table is displayed the user can click on the NCT ID to navigate to the NIH clinical trial database
+            the specific record for that NCT ID will appear. Clicking on individual Investigator, the contact
+            information will be displayed in a pop up window. After each search is necessary to clear the Type study
+            field before beginning the next search.
+        </div>
+        <div id="searchInstructions" style="padding: 30px; background-color: #E6F1F6; color: #1E4770;">
+            <strong>
+                Fill in the Type study field and then press the Search button to initiate the search.
+            </strong>
+        </div>
+        <br>
+
+        <form action="search-by-rank.html" method="GET" autocomplete="off">
+            <div class="input-container">
+                <input type="text" id="searchQueryAuthor" name="exprAuthor" placeholder="Type study field" size="50">
+            </div>
+            <input type="text" id="queryInputOnly" name="queryInputOnly" hidden="true">
+            <input type="hidden" name="fmt" value="json">
+            <button type="submit" onclick="addSearchAuthorQuery()" class="search-button">Search</button>
+        </form>
+
     </div>
     <div id="introductionContent">
         <div class="card" style="padding: 30px; background-color: #E6F1F6; color: #1E4770;">
@@ -142,14 +105,9 @@
                 nation's food supply, cosmetics, and products that emit radiation.
             </div>
         </div>
-        <div class="card">
-            <a style="display: flex;" href="search-portal.html" target="_blank">Search Portal</a>
-            <br>
-            <div>
-                Search Portal brings the user to the three customized searches mentioned in the introduction.
-            </div>
-        </div>
     </div>
+
+    <script src="script.js"></script>
 </body>
 
 </html>
