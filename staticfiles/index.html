@@ -10,19 +10,19 @@
 </head>
 
 <body>
-    <h1 id="OriginTitle">Taiwan Clinical Trial Portal</h1>
-    <h1 id="authorRankTitle" style="display: none;">Search Author Contact by Rank</h1>
-    <br>
+    <header>
+        <h1 id="originTitle">Taiwan Clinical Trial Portal</h1>
+        <h1 id="authorRankTitle" style="display: none;">Search Author Contact by Rank</h1>
+    </header>
     <div id="searchContainer">
         <button id="showAuthorTab" onclick="showTab('searchAuthor')">Search author contact by rank</button>
     </div>
 
-    <br>
-    <div id="introduction">
+    <div class="card" id="introduction">
         Press the button on top of this page to get started!
     </div>
     <div id="sAuthorRank" style="display:none">
-        <div id="searchContent">
+        <div class="card" id="searchContent">
             Depressing the Search author contact by rank bring up a table with five columns . Clicking on the Count link
             results in navigating to the NIH clinical trials database classic web site showing all the clinical trials
             performed by the researcher(s). It is sorted by the number of clinical trials listed researcher(s) have
@@ -36,10 +36,8 @@
             information will be displayed in a pop up window. After each search is necessary to clear the Type study
             field before beginning the next search.
         </div>
-        <div id="searchInstructions" style="padding: 30px; background-color: #E6F1F6; color: #1E4770;">
-            <strong>
-                Fill in the Type study field and then press the Search button to initiate the search.
-            </strong>
+        <div class="card" id="searchInstructions">
+            <strong>Fill in the Type study field and then press the Search button to initiate the search.</strong>
         </div>
         <br>
 
@@ -54,7 +52,7 @@
 
     </div>
     <div id="introductionContent">
-        <div class="card" style="padding: 30px; background-color: #E6F1F6; color: #1E4770;">
+        <div class="card" style="background-color: #E6F1F6; color: #1E4770;">
             <h2 style="font-size: 24px; margin-bottom: 10px;">Introduction</h2>
             <p style="font-size: 18px;">
                 Welcome to Taiwan Clinical Trials Portal. Here you can search for all clinical trials that are being or
@@ -65,7 +63,11 @@
             </p>
         </div>
         <br>
-        <div class="card" style="padding: 30px; background-color: #E6F1F6; color: #1E4770;">
+
+    </div>
+    <div id="getStarted">
+
+        <div class="card" style="background-color: #E6F1F6; color: #1E4770;">
             <h2 style="font-size: 24px; margin-bottom: 10px;">Get Started</h2>
             <p style="font-size: 18px;">
                 To use the site, you first have to select a condition (or disease name). Valid names can be found at
