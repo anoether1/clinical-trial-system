@@ -496,7 +496,7 @@
             investigatorAffiliation.textContent = item.ResponsiblePartyInvestigatorAffiliation.length ? 'Affiliation: ' + item.ResponsiblePartyInvestigatorAffiliation : '';
             oldNameTitle.textContent = item.ResponsiblePartyOldNameTitle.length ? 'Old Name Title: ' + item.ResponsiblePartyOldNameTitle : '';
             oldOrganization.textContent = item.ResponsiblePartyOldOrganization.length ? 'Old Organization: ' + item.ResponsiblePartyOldOrganization : '';
-            
+
             // Iterate through each card element and hide it if it has no content
             const cardElements = document.querySelectorAll('#contactPopup .card');
             cardElements.forEach(function (card) {
@@ -514,7 +514,7 @@
             contactPopup.style.display = 'none';
         }
 
-        fetchAllResearch();
+        fetchAuthorByRank();
     </script>
 
 </body>
