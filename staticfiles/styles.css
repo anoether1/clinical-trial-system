@@ -9,12 +9,8 @@ body {
     padding: 0;
 }
 
-#introduction,
-#sAuthorRank,
-#introductionContent,
-#serviceContent,
-#searchContent {
-    display: flex;
+header {
+    margin-top: 10%;
 }
 
 h1 {
@@ -25,10 +21,11 @@ h1 {
     padding: 20px 0;
 }
 
-#searchContainer {
+#searchContainer,
+#searchForm {
     display: flex;
     justify-content: center;
-    margin-bottom: 20px;
+    margin-bottom: 3%;
 }
 
 #searchContainer button {
@@ -55,8 +52,8 @@ h1 {
 
 .input-container {
     display: flex;
-    align-items: center;
     margin-bottom: 10px;
+    height: 3%;
 }
 
 .input-container input[type="text"] {
@@ -67,57 +64,23 @@ h1 {
     outline: none;
 }
 
-.checkbox-container {
-    display: flex;
-    margin-bottom: 10px;
-}
-
-.checkbox-container label {
-    margin-right: 10px;
-    font-size: 16px;
-}
-
-.checkbox-container input[type="checkbox"] {
-    margin-right: 5px;
-}
-
 .search-button {
     padding: 10px 20px;
-    font-size: 16px;
+    font-size: 14px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     background-color: #007bff;
     color: #fff;
     transition: background-color 0.3s, color 0.3s;
+    height: 3%;
 }
 
 .search-button:hover {
     background-color: #0056b3;
 }
 
-#introduction {
-    background-color: #f9f9f9;
-    padding: 10px;
-    border-radius: 4px;
-    text-align: left;
-    max-width: 600px;
-    margin: 10px 0;
-}
-
-/* #searchContent {
-    background-color: #f9f9f9;
-    padding: 20px;
-    border-radius: 8px;
-    text-align: left;
-    /* max-width: 800px; */
-margin: 20px auto;
-line-height: 1.6;
-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-
-}
-
-*/ #searchInstructions {
+#searchInstructions {
     background-color: #f5f5f5;
     padding: 20px;
     border-radius: 8px;
@@ -125,41 +88,6 @@ box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin-top: 20px;
     line-height: 1.6;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.navbar {
-    background-color: #333;
-    overflow: hidden;
-    height: 100vh;
-    width: 200px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    padding-top: 50px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-}
-
-.navbar a {
-    display: block;
-    color: #fff;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-    font-size: 18px;
-    margin-bottom: 10px;
-    transition: background-color 0.3s, margin-bottom 0.3s;
-}
-
-.navbar a.service {
-    margin-bottom: 0;
-}
-
-#serviceContent {
-    margin-left: 200px;
-    padding: 20px;
 }
 
 .card {
@@ -187,15 +115,86 @@ box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* Additional styles to fix the layout issue */
-#introductionContent {
-    padding-left: 10%;
-    padding-right: 10%;
-    margin-top: 80px;
+#CDISC,
+#EMA,
+#FDA {
+    padding-left: 3%;
+    margin-left: 13%;
+    margin-right: 8%;
+    width: 70%;
 }
 
+
+#introductionContent,
 #getStarted {
-    padding-left: 10%;
-    padding-right: 10%;
-    margin-top: 80px;
+    padding-left: 3%;
+    background-color: #E6F1F6;
+    color: #1E4770;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 5px;
+    width: 70%;
+}
+
+#searchContent,
+#searchInstructions {
+    padding-left: 3%;
+    background-color: #f9f9f9;
+    text-align: left;
+    margin-left: 13%;
+    margin-right: 13%;
+    margin-top: 5px;
+    line-height: 1.6;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#searchForm {
+    margin-left: 13%;
+    margin-right: 10%;
+    margin-bottom: 5%;
+}
+
+#introductionContent h2,
+#getStarted h2 {
+    font-size: 24px;
+}
+
+#introductionContent p,
+#getStarted p {
+    font-size: 18px;
+}
+
+
+@keyframes slideInFromRight {
+    0% {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.slide-in {
+    animation: slideInFromRight 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.fade-in {
+    animation: fadeIn 2s ease-in-out;
+    animation-fill-mode: forwards;
+    /* This ensures the element stays visible after animation */
+    opacity: 0;
+    /* Start the element with opacity 0 to prepare for the animation */
 }

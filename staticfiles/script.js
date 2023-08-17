@@ -1,16 +1,27 @@
-const OriginTitle = document.getElementById("OriginTitle");
 
-function showTab(tab) {
-    const sAuthorRank = document.getElementById("sAuthorRank");
+function showTab() {
+    const sAuthorRankElement = document.getElementById("sAuthorRank");
     const showAuthorTab = document.getElementById("showAuthorTab");
     const authorRankTitle = document.getElementById("authorRankTitle");
-    const introduction = document.getElementById("introduction");
+    const searchFormElement = document.getElementById("searchForm");
 
-    introduction.style.display = 'none';
-    sAuthorRank.style.display = 'block';
+    sAuthorRankElement.classList.add("slide-in");
+    // searchFormElement.classList.add("slide-in");
+    authorRankTitle.classList.add("slide-in");
+
+    const originTitle = document.getElementById("originTitle");
+    const getStarted = document.getElementById("getStarted");
+    const introductionContent = document.getElementById("introductionContent");
+
+
+    sAuthorRankElement.style.display = 'block';
+    searchFormElement.style.display = 'block';
+
     authorRankTitle.style.display = 'block';
     showAuthorTab.style.display = 'none';
-    OriginTitle.style.display = 'none';
+    originTitle.style.display = 'none';
+    introductionContent.style.display = 'none';
+    getStarted.style.display = 'none';
 }
 
 
@@ -21,3 +32,19 @@ function addSearchAuthorQuery() {
     exprInput.value = "(AREA[LocationCountry]Taiwan OR AREA[LocationCity]Taipei) AND " + searchQueryAuthor;
     queryInputOnly.value = searchQueryAuthor;
 }
+
+
+function fadeElementsInSequence(elements) {
+    const delay = 500; // Delay between fading in each element (in milliseconds)
+
+    elements.forEach(function (elementId, index) {
+        setTimeout(function () {
+            const element = document.getElementById(elementId);
+            element.classList.add("fade-in");
+            element.style.display = "block";
+        }, index * delay);
+    });
+}
+
+const elementsToFadeIn = ["introductionContent", "getStarted", "searchContainer"];
+fadeElementsInSequence(elementsToFadeIn);
