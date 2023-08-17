@@ -34,7 +34,7 @@ function addSearchAuthorQuery() {
 
 
 function fadeElementsInSequence(elements) {
-    const delay = 500; // Delay between fading in each element (in milliseconds)
+    const delay = 700; // Delay between fading in each element (in milliseconds)
 
     elements.forEach(function (elementId, index) {
         setTimeout(function () {
