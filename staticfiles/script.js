@@ -6,7 +6,6 @@ function showTab() {
     const searchFormElement = document.getElementById("searchForm");
 
     sAuthorRankElement.classList.add("slide-in");
-    // searchFormElement.classList.add("slide-in");
     authorRankTitle.classList.add("slide-in");
 
     const originTitle = document.getElementById("originTitle");
