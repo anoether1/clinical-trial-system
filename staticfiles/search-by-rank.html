@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Search Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1,
+        h2 {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        #loadingIndicator {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+            font-size: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            margin: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        a {
+            color: blue;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        #searchButtons {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        #searchButtons button {
+            padding: 10px 20px;
+            margin: 0 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: #fff;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        #searchButtons button:disabled {
+            background-color: #ccc;
+            color: #555;
+            cursor: not-allowed;
+        }
+
+        #searchButtons button:hover {
+            background-color: #0056b3;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            border-radius: 5px;
+            background-color: #f7f7f7;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .modal h2 {
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .modal p {
+            margin: 0;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+        }
+
+        #contactPopup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1001;
+            max-width: 80%;
+            /* Limit the maximum width of the popup */
+            text-align: center;
+            /* Center the content horizontally */
+            line-height: 1.5;
+            /* Increase the line height for more vertical spacing */
+            transition: top 0.3s, left 0.3s;
+            /* Smooth transition for top and left properties */
+        }
+
+        #contactPopup .card {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f7f7f7;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+
+        #contactPopup h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        #contactPopup p {
+            margin: 5px 0;
+        }
+
+        #contactPopup button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: #fff;
+            transition: background-color 0.3s, color 0.3s;
+            margin-top: 20px;
+        }
+
+        #contactPopup button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 id="searchTitle"></h1>
+    <h2 id="searchQueryTitle"></h2>
+    <div id="searchButtons">
+        <button id="searchAuthorContactByRankBtn" onclick="fetchAuthorByRank()" disabled>Search author contact by
+            rank</button>
+        <button id="searchAllResultBtn" onclick="fetchAllResearch()">Search all research</button>
+    </div>
+
+    <div id="loadingIndicator">
+        <p>Loading...</p>
+    </div>
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <span class="modal-close" onclick="closeModal()">&times;</span>
+            <h2>Error occurred</h2>
+            <p id="modalMessage"></p>
+        </div>
+    </div>
+    <table id="searchByRankResultTable" style="display: none;">
+        <thead>
+            <tr>
+                <th>Counts</th>
+                <th>Contact Name</th>
+                <th>Contact Email</th>
+                <th>Contact Phone</th>
+                <th>Contact Phone Ext</th>
+            </tr>
+        </thead>
+        <tbody id="table-body-by-rank">
+        </tbody>
+    </table>
+
+    <table id="searchAllResultTable" style="display: none;">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>NCT ID</th>
+                <th>Brief Title</th>
+                <th>Condition</th>
+
+                <th>Investigator</th>
+            </tr>
+        </thead>
+        <tbody id="table-body-all-research">
+        </tbody>
+    </table>
+    <!-- Add a pop-up window to display contact details -->
+    <div id="contactPopup">
+        <h2>Contact Details</h2>
+        <div class="card" id="contactName"></div>
+        <div class="card" id="contactEmail"></div>
+        <div class="card" id="contactPhone"></div>
+        <div class="card" id="contactPhoneExt"></div>
+        <div class="card" id="contactRole"></div>
+        <div class="card" id="investigatorFullName"></div>
+        <div class="card" id="investigatorTitle"></div>
+        <div class="card" id="investigatorAffiliation"></div>
+        <div class="card" id="oldNameTitle"></div>
+        <div class="card" id="oldOrganization"></div>
+
+        <button onclick="closeContactPopup()">Close</button>
+    </div>
+
+    <script>
+        // You should change this to your server ip or to dns
+        const domainName = "ec2-13-56-116-167.us-west-1.compute.amazonaws.com";
+        // const domainName = "localhost:8000";
+        const queryInputOnly = new URLSearchParams(window.location.search).get("queryInputOnly");
+        const searchQuery = new URLSearchParams(window.location.search).get("exprAuthor");
+        const title = document.getElementById("searchTitle");
+        const searchQueryTitle = document.getElementById("searchQueryTitle");
+        searchQueryTitle.innerHTML = `Query: ${searchQuery}`;
+        title.innerHTML = `Search Results - ${queryInputOnly} `;
+
+        // show loading 
+        function showLoadingIndicator() {
+            const loadingIndicator = document.getElementById("loadingIndicator");
+            loadingIndicator.style.display = "block";
+        }
+        // hidden loading
+        function hideLoadingIndicator() {
+            const loadingIndicator = document.getElementById("loadingIndicator");
+            loadingIndicator.style.display = "none";
+        }
+        // 
+        function displayTable(table) {
+            const searchByRankResultTable = document.getElementById("searchByRankResultTable");
+            const searchAuthorContactByRankBtn = document.getElementById('searchAuthorContactByRankBtn');
+
+            const searchAllResultTable = document.getElementById("searchAllResultTable");
+            const searchAllResultBtn = document.getElementById('searchAllResultBtn');
+
+            if (table === "searchAllResultTable") {
+                searchAllResultTable.style.display = "table";
+                searchByRankResultTable.style.display = "none";
+                searchAuthorContactByRankBtn.disabled = false;
+                searchAllResultBtn.disabled = true;
+            } else if (table === "searchByRankResultTable") {
+                searchByRankResultTable.style.display = "table";
+                searchAllResultTable.style.display = "none";
+                searchAuthorContactByRankBtn.disabled = true;
+                searchAllResultBtn.disabled = false;
+            }
+
+        }
+        function createSearchByRankTable(response) {
+            const title = document.getElementById("searchTitle");
+            const tableBody = document.getElementById("table-body-by-rank");
+
+            title.innerHTML = `Search Results - ${queryInputOnly} (${response['total']})`;
+
+            response['data'].forEach(function (item) {
+                const row = document.createElement("tr");
+                const countCell = document.createElement("td");
+                const countLink = document.createElement("a");
+
+                countLink.textContent = item[1].count;
+                countLink.href = `https://classic.clinicaltrials.gov/ct2/results?term=${searchQuery}+AND+${item[0]}`;
+                countLink.target = "_blank";
+                countCell.appendChild(countLink);
+                const nameCell = document.createElement("td");
+                const nameLink = document.createElement("a");
+                nameLink.textContent = item[0];
+                nameLink.href = `https://pubmed.ncbi.nlm.nih.gov/?term=${item[0]}+AND+${queryInputOnly}&sort=date&ac=yes`;
+                nameLink.target = "_blank";
+                nameCell.appendChild(nameLink);
+                const emailCell = document.createElement("td");
+                emailCell.textContent = item[1].ContactEMail.join(", ");
+                const phoneCell = document.createElement("td");
+                phoneCell.textContent = item[1].ContactPhone.join(", ");
+                const phoneExtCell = document.createElement("td");
+                phoneExtCell.textContent = item[1].ContactPhoneExt.join(", ");
+
+                row.appendChild(countCell);
+                row.appendChild(nameCell);
+                row.appendChild(emailCell);
+                row.appendChild(phoneCell);
+                row.appendChild(phoneExtCell);
+                tableBody.appendChild(row);
+
+            });
+        }
+        function createContactNameCell(item) {
+            const contactNameCell = document.createElement('td');
+
+            const contactNames = [
+                item.OverallOfficialName,
+                item.CentralContactName,
+                item.ResponsiblePartyInvestigatorFullName,
+                item.ResponsiblePartyOldNameTitle,
+                item.ResponsiblePartyInvestigatorAffiliation,
+                item.ResponsiblePartyOldOrganization
+            ].filter(name => name.length > 0);
+
+            if (contactNames.length > 0) {
+                contactNameCell.textContent = contactNames[0];
+            } else {
+                contactNameCell.textContent = "Contact Info";
+            }
+
+            return contactNameCell;
+        }
+        function createSearchAllResultTable(response) {
+            const title = document.getElementById("searchTitle");
+            const tableBody = document.getElementById("table-body-all-research");
+            title.innerHTML = `Search Results - ${queryInputOnly} (${response['total']})`;
+
+            response['data'].forEach(function (item) {
+                const row = document.createElement('tr');
+                const rankCell = document.createElement('td');
+                rankCell.textContent = item.Rank;
+                const nctIdCell = document.createElement('td');
+                const nctIdLink = document.createElement('a');
+                nctIdLink.href = `https://clinicaltrials.gov/ct2/show/${item.NCTId}`;
+                nctIdLink.textContent = item.NCTId;
+                nctIdLink.target = "_blank";
+
+                const briefTitleCell = document.createElement('td');
+                briefTitleCell.textContent = item.BriefTitle;
+
+                const conditionCell = document.createElement('td');
+                conditionCell.textContent = item.Condition;
+
+                const contactNameCell = createContactNameCell(item);
+
+                contactNameCell.style.cursor = 'pointer'; // Add cursor style for click interaction
+                contactNameCell.addEventListener('click', function () {
+                    displayContactPopup(item);
+                });
+
+                nctIdCell.appendChild(nctIdLink);
+                row.appendChild(rankCell);
+                row.appendChild(nctIdCell);
+                row.appendChild(briefTitleCell);
+                row.appendChild(conditionCell);
+                row.appendChild(contactNameCell);
+
+                tableBody.appendChild(row);
+            })
+        }
+
+        function fetchAuthorByRank() {
+            const searchAuthorContactByRankBtn = document.getElementById('searchAuthorContactByRankBtn');
+            const searchAllResultBtn = document.getElementById('searchAllResultBtn');
+            const apiUrl = `http://${domainName}/api/rank?searchQuery=${searchQuery}`;
+            const rowsLength = document.getElementById('table-body-by-rank').rows.length
+            showLoadingIndicator();
+
+            if (rowsLength === 0) {
+                fetch(apiUrl)
+                    .then(function (response) {
+                        return response.json();
+                    })
+                    .then(function (data) {
+                        if (data['total'] > 0) {
+                            createSearchByRankTable(data);
+                        } else {
+                            openModal("No Study Found. Try another keyword.");
+                        }
+                        hideLoadingIndicator();
+                        displayTable("searchByRankResultTable");
+                    })
+                    .catch(function (error) {
+                        console.error("Error: ", error);
+                        hideLoadingIndicator();
+                        openModal(`Error: ${error}`);
+                    });
+            } else {
+                hideLoadingIndicator();
+                displayTable("searchByRankResultTable");
+            }
+        }
+
+        function fetchAllResearch() {
+            const searchAuthorContactByRankBtn = document.getElementById('searchAuthorContactByRankBtn');
+            const searchAllResultBtn = document.getElementById('searchAllResultBtn');
+            const rowsLength = document.getElementById('table-body-all-research').rows.length
+            const apiUrl = `http://${domainName}/api/general?searchQuery=${searchQuery}`;
+            // 發送GET請求並處理回應
+            showLoadingIndicator();
+            if (rowsLength === 0) {
+                fetch(apiUrl)
+                    .then(function (response) {
+                        return response.json();
+                    })
+                    .then(function (data) {
+                        if (data['total'] > 0) {
+                            createSearchAllResultTable(data);
+                        } else {
+                            openModal("No Study Found. Try another keyword.");
+                        }
+                        hideLoadingIndicator();
+                        displayTable("searchAllResultTable");
+                    })
+                    .catch(function (error) {
+                        console.error("Error: ", error);
+                        hideLoadingIndicator();
+                        openModal(`Error: ${error}`);
+                    });
+            } else {
+                hideLoadingIndicator();
+                displayTable("searchAllResultTable");
+            }
+        }
+
+        function openModal(message) {
+            const modalOverlay = document.getElementById('modalOverlay');
+            const modalMessage = document.getElementById('modalMessage');
+            modalMessage.textContent = message;
+            modalOverlay.style.display = 'block';
+        }
+
+        function closeModal() {
+            const modalOverlay = document.getElementById('modalOverlay');
+            modalOverlay.style.display = 'none';
+            window.history.back();
+        }
+        function displayContactPopup(item) {
+            const contactPopup = document.getElementById('contactPopup');
+            const contactName = document.getElementById('contactName');
+            const contactEmail = document.getElementById('contactEmail');
+            const contactPhone = document.getElementById('contactPhone');
+            const contactPhoneExt = document.getElementById('contactPhoneExt');
+            const contactRole = document.getElementById('contactRole');
+            const investigatorFullName = document.getElementById('investigatorFullName');
+            const investigatorTitle = document.getElementById('investigatorTitle');
+            const investigatorAffiliation = document.getElementById('investigatorAffiliation');
+            const oldNameTitle = document.getElementById('oldNameTitle');
+            const oldOrganization = document.getElementById('oldOrganization');
+
+            contactName.textContent = item.CentralContactName.length ? 'Name: ' + item.CentralContactName : '';
+            contactEmail.textContent = item.CentralContactEMail.length ? 'Email: ' + item.CentralContactEMail : '';
+            contactPhone.textContent = item.CentralContactPhone.length ? 'Phone: ' + item.CentralContactPhone : '';
+            contactPhoneExt.textContent = item.CentralContactPhoneExt.length ? 'Phone Extension: ' + item.CentralContactPhoneExt : '';
+            contactRole.textContent = item.CentralContactRole.length ? 'Role: ' + item.CentralContactRole : '';
+
+
+            if (item.ResponsiblePartyInvestigatorFullName.length) {
+                investigatorFullName.textContent = 'Investigator: ' + item.ResponsiblePartyInvestigatorFullName;
+            } else if (item.CentralContactName.length) {
+                investigatorFullName.textContent = 'Investigator: ' + item.CentralContactName;
+            }
+
+            investigatorTitle.textContent = item.ResponsiblePartyInvestigatorTitle.length ? 'Title: ' + item.ResponsiblePartyInvestigatorTitle : '';
+            investigatorAffiliation.textContent = item.ResponsiblePartyInvestigatorAffiliation.length ? 'Affiliation: ' + item.ResponsiblePartyInvestigatorAffiliation : '';
+            oldNameTitle.textContent = item.ResponsiblePartyOldNameTitle.length ? 'Old Name Title: ' + item.ResponsiblePartyOldNameTitle : '';
+            oldOrganization.textContent = item.ResponsiblePartyOldOrganization.length ? 'Old Organization: ' + item.ResponsiblePartyOldOrganization : '';
+
+            // Iterate through each card element and hide it if it has no content
+            const cardElements = document.querySelectorAll('#contactPopup .card');
+            cardElements.forEach(function (card) {
+                if (card.textContent.trim() === '') {
+                    card.style.display = 'none';
+                } else {
+                    card.style.display = 'block';
+                }
+            });
+            contactPopup.style.display = 'block';
+        }
+
+        function closeContactPopup() {
+            const contactPopup = document.getElementById('contactPopup');
+            contactPopup.style.display = 'none';
+        }
+
+        fetchAuthorByRank();
+    </script>
+
+</body>
+
+</html>

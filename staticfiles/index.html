@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Portal</title>
+    <link rel="stylesheet" href="styles.css">
+
+</head>
+
+<body>
+    <header>
+        <h1 id="originTitle">Taiwan Clinical Trial Portal</h1>
+        <h1 id="authorRankTitle" style="display: none;" class="slide-in">Search Author Contact by Rank</h1>
+    </header>
+    <div class="card" id="introductionContent" style="display: none;">
+        <h2>Introduction</h2>
+        <p>
+            Welcome to Taiwan Clinical Trials Portal. Here you can search for all clinical trials that are being or
+            have been conducted in Taiwan or by Taiwan researchers. The Search author contact by rank button
+            searches by the name of the researchers conducting the study, it lists the authors sorted by number of
+            clinical trials performed. It assigns a rank based on the number of studies the researcher(s) have
+            performed.
+        </p>
+    </div>
+    <div class="card" id="getStarted" style="display: none;">
+        <h2>Get Started</h2>
+        <p>
+            To use the site, you first have to select a condition (or disease name). Valid names can be found at
+            CDISC, EMA,
+            or FDA sites.
+        </p>
+    </div>
+    <div id="searchContainer" style="display: none;">
+        <button id="showAuthorTab" onclick="showTab()">Search author contact by rank</button>
+    </div>
+
+    <div class="slide-in" id="sAuthorRank" style="display:none">
+        <div class="card" id="searchContent">
+            <h2>How it work</h2>
+            <p>
+                Depressing the Search author contact by rank bring up a table with five columns.
+                Clicking on the Count link results in navigating to the NIH clinical trials database classic web site
+                showing all the clinical trials performed by the researcher(s).
+                It is sorted by the number of clinical trials listed researcher(s) have done.
+
+                Clicking the Contact Name link navigates the user to the Pub Med site where the publications of the
+                selected researcher are shown.
+                The user may find the contact information in the remaining columns. When the user clicks on the Search
+                research button will navigate user to a separate table showing Rank, NCT ID, Brief Title, Condition and
+                Investigator at the top of the table will be the number of records found in the NIH
+                clinical trial data base for that specific disease, the API query interface will also be shown. Once the
+                separate table is displayed the user can click on the NCT ID to navigate to the NIH clinical trial
+                database
+                the specific record for that NCT ID will appear. Clicking on individual Investigator, the contact
+                information will be displayed in a pop up window. After each search is necessary to clear the Type study
+                field before beginning the next search.
+            </p>
+        </div>
+        <div class="card" id="searchInstructions">
+            <strong>Fill in the Type study field and then press the Search button to initiate the search.</strong>
+        </div>
+
+        <form id="searchForm" action="search-by-rank.html" method="GET" autocomplete="off">
+            <div class="input-container">
+                <input type="text" id="searchQueryAuthor" name="exprAuthor" placeholder="Type study field" size="50">
+            </div>
+            <input type="text" id="queryInputOnly" name="queryInputOnly" hidden="true">
+            <input type="hidden" name="fmt" value="json">
+            <button type="submit" onclick="addSearchAuthorQuery()" class="search-button">Search</button>
+        </form>
+
+    </div>
+
+
+    <div id="serviceContent">
+        <div id="CDISC" class="card">
+            <a href="https://www.cdisc.org/standards/therapeutic-areas/disease-area" target="_blank">CDISC</a>
+            <br>
+            <div>
+                The Clinical Data Interchange Standards Consortium (CDISC) is an open, non-profit organization that
+                develops and supports global data standards to improve the quality and interoperability of medical
+                research and healthcare.
+            </div>
+        </div>
+        <div id="EMA" class="card">
+            <a href="https://www.ema.europa.eu/en/news-events/therapeutic-areas-latest-updates" target="_blank">EMA</a>
+            <br>
+            <div>
+                The European Medicines Agency (EMA) protects and promotes human and animal health by evaluating and
+                monitoring medicines within the European Union (EU) and the European Economic Area (EEA).
+            </div>
+        </div>
+        <div id="FDA" class="card">
+            <a href="https://www.fda.gov/drugs/development-resources/spectrum-diseasesconditions"
+                target="_blank">FDA</a>
+            <br>
+            <div>
+                The Food and Drug Administration (FDA) is responsible for protecting the public health by assuring the
+                safety, efficacy, and security of human and veterinary drugs, biological products, medical devices, the
+                nation's food supply, cosmetics, and products that emit radiation.
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>

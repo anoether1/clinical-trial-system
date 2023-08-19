@@ -14,6 +14,14 @@ class NihInfoType(TypedDict):
     ContactPhoneExt: Set[str]
 
 
+class ResearchInfoType(TypedDict):
+    Rank: int
+    NCTId: List[str]
+    BriefTitle: List[str]
+    Condition: List[str]
+    LocationCity: List[str]
+
+
 class StudyFieldsType(TypedDict):
     Rank: int
     CentralContactName: List[str]
