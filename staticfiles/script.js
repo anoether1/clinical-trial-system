@@ -27,9 +27,7 @@ function showTab() {
 function addSearchAuthorQuery() {
     const searchQueryAuthor = document.getElementById("searchQueryAuthor").value;
     const exprInput = document.querySelector("input[name='exprAuthor']");
-    const queryInputOnly = document.querySelector("input[name='queryInputOnly']");
-    exprInput.value = "(AREA[LocationCountry]Taiwan OR AREA[LocationCity]Taipei) AND " + searchQueryAuthor;
-    queryInputOnly.value = searchQueryAuthor;
+    exprInput.value = searchQueryAuthor;
 }
 
 
@@ -47,7 +45,3 @@ function fadeElementsInSequence(elements) {
 
 const elementsToFadeIn = ["introductionContent", "getStarted", "searchContainer"];
 fadeElementsInSequence(elementsToFadeIn);
-
-// Clean all input field
-const exprInput = document.querySelector("input[name='exprAuthor']");
-exprInput.value = '';
