@@ -259,7 +259,8 @@
         const searchQuery = new URLSearchParams(window.location.search).get("exprAuthor");
         const title = document.getElementById("searchTitle");
         const searchQueryTitle = document.getElementById("searchQueryTitle");
-        searchQueryTitle.innerHTML = `Query: (AREA[LocationCountry]Taiwan OR AREA[LocationCity]Taipei) AND ${searchQuery}`;
+        const searchQueryWithRegion = `(AREA[LocationCountry]Taiwan OR AREA[LocationCity]Taipei) AND ${searchQuery}`;
+        searchQueryTitle.innerHTML = `Query: ${searchQueryWithRegion}`;
         title.innerHTML = `Search Results - ${searchQuery} `;
 
         // show loading 
@@ -305,13 +306,13 @@
                 const countLink = document.createElement("a");
 
                 countLink.textContent = item[1].count;
-                countLink.href = `https://classic.clinicaltrials.gov/ct2/results?term=${searchQuery}+AND+${item[0]}`;
+                countLink.href = `https://classic.clinicaltrials.gov/ct2/results?term=${searchQueryWithRegion}+AND+${item[0]}`;
                 countLink.target = "_blank";
                 countCell.appendChild(countLink);
                 const nameCell = document.createElement("td");
                 const nameLink = document.createElement("a");
                 nameLink.textContent = item[0];
-                nameLink.href = `https://pubmed.ncbi.nlm.nih.gov/?term=${item[0]}+AND+${searchQuery}&sort=date&ac=yes`;
+                nameLink.href = `https://pubmed.ncbi.nlm.nih.gov/?term=${item[0]}+AND+${searchQueryWithRegion}&sort=date&ac=yes`;
                 nameLink.target = "_blank";
                 nameCell.appendChild(nameLink);
                 const emailCell = document.createElement("td");
