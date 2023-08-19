@@ -47,3 +47,7 @@ function fadeElementsInSequence(elements) {
 
 const elementsToFadeIn = ["introductionContent", "getStarted", "searchContainer"];
 fadeElementsInSequence(elementsToFadeIn);
+
+// Clean all input field
+const exprInput = document.querySelector("input[name='exprAuthor']");
+exprInput.value = '';
