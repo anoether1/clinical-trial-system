@@ -24,8 +24,8 @@ router = APIRouter()
 )
 async def search_all_research(
     searchQuery: str = Query(
-        description="Input search query and get nih info",
-        example="(AREA[LocationCountry]Taiwan OR AREA[LocationCity]Taipei) AND stroke",
+        description="Input search query and get nih info (Taiwan only)",
+        example="stroke",
     ),
 ):
     """
@@ -34,7 +34,7 @@ async def search_all_research(
     fields = 'NCTId,BriefTitle,Condition,CentralContactName,CentralContactEMail,CentralContactPhone,CentralContactPhoneExt,CentralContactRole,'
     fields += 'ResponsiblePartyInvestigatorFullName,ResponsiblePartyInvestigatorTitle,ResponsiblePartyInvestigatorAffiliation,ResponsiblePartyOldNameTitle,ResponsiblePartyOldOrganization,'
     fields += 'OverallOfficialName'
-
+    searchQuery = f'(AREA[LocationCountry]Taiwan OR AREA[LocationCity]Taipei) AND {searchQuery}'
     search_nih = SearchNih(searchQuery, fields)
     # get total amount of data
     total = search_nih.search_by_rank(1, 1).get("NStudiesFound", None)
@@ -54,8 +54,8 @@ async def search_all_research(
 )
 def searchByRank(
     searchQuery: str = Query(
-        description="Input search query and get nih info",
-        example="(AREA[LocationCountry]Taiwan OR AREA[LocationCity]Taipei) AND stroke",
+        description="Input search query and get nih info (Taiwan only)",
+        example="stroke",
     ),
 ):
     """
@@ -64,7 +64,7 @@ def searchByRank(
     fields = "CentralContactName,CentralContactRole,CentralContactEMail,CentralContactPhone,CentralContactPhoneExt,"
     fields += "LocationContactEMail,LocationCity,LocationContactName,LocationContactPhone,LocationContactPhoneExt,LocationContactRole,LocationFacility,"
     fields += "OverallOfficialName"
-
+    searchQuery = f'(AREA[LocationCountry]Taiwan OR AREA[LocationCity]Taipei) AND {searchQuery}'
     search_nih = SearchNih(searchQuery, fields)
     # get total amount of data
     total = search_nih.search_by_rank(1, 1).get("NStudiesFound", None)

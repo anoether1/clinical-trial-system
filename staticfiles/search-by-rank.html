@@ -393,7 +393,7 @@
         function fetchAuthorByRank() {
             const searchAuthorContactByRankBtn = document.getElementById('searchAuthorContactByRankBtn');
             const searchAllResultBtn = document.getElementById('searchAllResultBtn');
-            const apiUrl = `http://${domainName}/api/rank?searchQuery=${searchQuery}`;
+            const apiUrl = `http://${domainName}/api/rank?searchQuery=${queryInputOnly}`;
             const rowsLength = document.getElementById('table-body-by-rank').rows.length
             showLoadingIndicator();
 
@@ -426,7 +426,7 @@
             const searchAuthorContactByRankBtn = document.getElementById('searchAuthorContactByRankBtn');
             const searchAllResultBtn = document.getElementById('searchAllResultBtn');
             const rowsLength = document.getElementById('table-body-all-research').rows.length
-            const apiUrl = `http://${domainName}/api/general?searchQuery=${searchQuery}`;
+            const apiUrl = `http://${domainName}/api/general?searchQuery=${queryInputOnly}`;
             // 發送GET請求並處理回應
             showLoadingIndicator();
             if (rowsLength === 0) {
