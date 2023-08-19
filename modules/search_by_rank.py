@@ -152,7 +152,7 @@ class SearchNih:
             "fields": "",
             "fmt": "json",
             "min_rnk": 1,
-            "max_rnk": 100,
+            "max_rnk": 500,
         }
         url = "https://classic.clinicaltrials.gov/api/query/study_fields?"
         response = requests.get(url, params=params, timeout=30)
