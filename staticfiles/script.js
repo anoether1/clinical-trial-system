@@ -24,12 +24,6 @@ function showTab() {
 }
 
 
-function addSearchAuthorQuery() {
-    const searchQueryAuthor = document.getElementById("searchQueryAuthor").value;
-    const exprInput = document.querySelector("input[name='exprAuthor']");
-    exprInput.value = searchQueryAuthor;
-}
-
 
 function fadeElementsInSequence(elements) {
     const delay = 700; // Delay between fading in each element (in milliseconds)
