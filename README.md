@@ -19,7 +19,7 @@ $ python -m uvicorn api:app --host 0.0.0.0 --port 8000 --workers 4
 > Search this: 
 >> // You should change this to your server ip or to dns
 
-### How to commit code
+### How to commit code to remote branch
 ```
 $ git add .
 $ git commit -m "YOUR MESSAGE"
