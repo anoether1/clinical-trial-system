@@ -19,12 +19,25 @@ $ python -m uvicorn api:app --host 0.0.0.0 --port 8000 --workers 4
 > Search this: 
 >> // You should change this to your server ip or to dns
 
-### Pull this project to your branch
+### How to commit code to remote branch
+```
+$ git add .
+$ git commit -m "YOUR MESSAGE"
+$ git push
+```
+
+### How to merge origin/main
 ```
 $ git fetch --all
 $ git merge origin/main
+----- if no conflict occurred -----
 $ git push
 ```
+
+### How to push the code to origin/main
+> Send the merge request
+> Someone need to approve the mr
+
 ### Remove current change
 ```
 $ git reset --hard
