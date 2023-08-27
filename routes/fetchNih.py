@@ -72,7 +72,6 @@ def searchByRank(
         return JSONResponse({"message": "No study found"}, status_code=400)
 
     # calculate
-    # calcaulate_result = search_nih.search_author_info(50)
     calcaulate_result = search_nih.search_author_info(total)
 
     result = search_nih.get_calculate_author(calcaulate_result)
