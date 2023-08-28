@@ -305,7 +305,11 @@
                 const countCell = document.createElement("td");
                 const countLink = document.createElement("a");
 
-                countLink.textContent = item[1].count;
+                if (item[1].count > 100) {
+                    countLink.textContent = `100+`;
+                } else {
+                    countLink.textContent = item[1].count;
+                }
                 countLink.href = `https://classic.clinicaltrials.gov/ct2/results?term=${searchQueryWithRegion}+AND+${item[0]}`;
                 countLink.target = "_blank";
                 countCell.appendChild(countLink);
