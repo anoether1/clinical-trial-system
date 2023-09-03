@@ -80,7 +80,7 @@ def searchByRank(
     # recover the following three lines
     result.pop("C c w", None)
     result.pop("Study contact", None)
-    # result.pop("National taiwan university hospital", None)
+    
     sorted_data = sorted(
         result.items(), key=lambda x: x[1]["count"], reverse=True)
     return {"data": sorted_data, "total": total}

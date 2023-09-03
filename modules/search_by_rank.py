@@ -2,6 +2,7 @@ import requests
 from models.nih_study_fields import NihInfoWithCountType, ResearchInfoType, StudyFieldsResponseType, NihInfoType
 from typing import Dict, List, Set
 from concurrent.futures import ThreadPoolExecutor
+import re
 
 
 class SearchNih:
@@ -79,49 +80,50 @@ class SearchNih:
                 # calculate central contact name
                 if len(central_contact_name) > 0:
                     for contact_name in central_contact_name:
-                        calculate_result[contact_name] = calculate_result.get(
-                            contact_name, {})
-                        calculate_result[contact_name]["ContactEMail"] = (
-                            calculate_result[contact_name]
-                            .get("ContactEMail", set([]))
-                            .union(study_field["CentralContactEMail"])
-                        )
+                        if re.match(r'\S+', contact_name):
+                            calculate_result[contact_name] = calculate_result.get(
+                                contact_name, {})
+                            calculate_result[contact_name]["ContactEMail"] = (
+                                calculate_result[contact_name]
+                                .get("ContactEMail", set([]))
+                                .union(study_field["CentralContactEMail"])
+                            )
 
-                        calculate_result[contact_name]["ContactPhone"] = (
-                            calculate_result[contact_name]
-                            .get("ContactPhone", set([]))
-                            .union(study_field["CentralContactPhone"])
-                        )
+                            calculate_result[contact_name]["ContactPhone"] = (
+                                calculate_result[contact_name]
+                                .get("ContactPhone", set([]))
+                                .union(study_field["CentralContactPhone"])
+                            )
 
-                        calculate_result[contact_name]["ContactPhoneExt"] = (
-                            calculate_result[contact_name]
-                            .get("ContactPhoneExt", set([]))
-                            .union(study_field["CentralContactPhoneExt"])
-                        )
+                            calculate_result[contact_name]["ContactPhoneExt"] = (
+                                calculate_result[contact_name]
+                                .get("ContactPhoneExt", set([]))
+                                .union(study_field["CentralContactPhoneExt"])
+                            )
 
                 elif len(location_contact_name) > 0:
                     for contact_name in location_contact_name:
+                        if re.match(r'\S+', contact_name):
+                            calculate_result[contact_name] = calculate_result.get(
+                                contact_name, {})
 
-                        calculate_result[contact_name] = calculate_result.get(
-                            contact_name, {})
+                            calculate_result[contact_name]["ContactEMail"] = (
+                                calculate_result[contact_name]
+                                .get("ContactEMail", set([]))
+                                .union(study_field["LocationContactEMail"])
+                            )
 
-                        calculate_result[contact_name]["ContactEMail"] = (
-                            calculate_result[contact_name]
-                            .get("ContactEMail", set([]))
-                            .union(study_field["LocationContactEMail"])
-                        )
+                            calculate_result[contact_name]["ContactPhone"] = (
+                                calculate_result[contact_name]
+                                .get("ContactPhone", set([]))
+                                .union(study_field["LocationContactPhone"])
+                            )
 
-                        calculate_result[contact_name]["ContactPhone"] = (
-                            calculate_result[contact_name]
-                            .get("ContactPhone", set([]))
-                            .union(study_field["LocationContactPhone"])
-                        )
-
-                        calculate_result[contact_name]["ContactPhoneExt"] = (
-                            calculate_result[contact_name]
-                            .get("ContactPhoneExt", set([]))
-                            .union(study_field["LocationContactPhoneExt"])
-                        )
+                            calculate_result[contact_name]["ContactPhoneExt"] = (
+                                calculate_result[contact_name]
+                                .get("ContactPhoneExt", set([]))
+                                .union(study_field["LocationContactPhoneExt"])
+                            )
 
         return calculate_result
 
