@@ -30,6 +30,18 @@
             font-size: 20px;
         }
 
+        #loadingOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -196,10 +208,10 @@
             rank</button>
         <button id="searchAllResultBtn" onclick="fetchAllResearch()">Search all research</button>
     </div>
-
-    <div id="loadingIndicator">
-        <p>Loading...</p>
+    <div id="loadingOverlay">
+        <div id="loadingIndicator">Loading...</div>
     </div>
+
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal">
             <span class="modal-close" onclick="closeModal()">&times;</span>
@@ -254,8 +266,8 @@
 
     <script>
         // You should change this to your server ip or to dns
-        const domainName = "ec2-13-56-116-167.us-west-1.compute.amazonaws.com";
-        // const domainName = "localhost:8000";
+        // const domainName = "ec2-13-56-116-167.us-west-1.compute.amazonaws.com";
+        const domainName = "localhost:8000";
         const searchQuery = new URLSearchParams(window.location.search).get("exprAuthor");
         const title = document.getElementById("searchTitle");
         const searchQueryTitle = document.getElementById("searchQueryTitle");
@@ -263,15 +275,24 @@
         searchQueryTitle.innerHTML = `Query: ${searchQueryWithRegion}`;
         title.innerHTML = `Search Results - ${searchQuery} `;
 
+        let searchAuthorTitle = "";
+        let searchAllTitle = "";
+
         // show loading 
         function showLoadingIndicator() {
             const loadingIndicator = document.getElementById("loadingIndicator");
             loadingIndicator.style.display = "block";
+            // disable mouse event
+            loadingOverlay.style.display = "block";
+            loadingOverlay.style.pointerEvents = "auto";
         }
         // hidden loading
         function hideLoadingIndicator() {
             const loadingIndicator = document.getElementById("loadingIndicator");
             loadingIndicator.style.display = "none";
+            // enable mouse event
+            loadingOverlay.style.display = "none";
+            loadingOverlay.style.pointerEvents = "none";
         }
         // 
         function displayTable(table) {
@@ -282,11 +303,13 @@
             const searchAllResultBtn = document.getElementById('searchAllResultBtn');
 
             if (table === "searchAllResultTable") {
+                title.innerHTML = searchAllTitle;
                 searchAllResultTable.style.display = "table";
                 searchByRankResultTable.style.display = "none";
                 searchAuthorContactByRankBtn.disabled = false;
                 searchAllResultBtn.disabled = true;
             } else if (table === "searchByRankResultTable") {
+                title.innerHTML = searchAuthorTitle;
                 searchByRankResultTable.style.display = "table";
                 searchAllResultTable.style.display = "none";
                 searchAuthorContactByRankBtn.disabled = true;
@@ -297,8 +320,7 @@
         function createSearchByRankTable(response) {
             const title = document.getElementById("searchTitle");
             const tableBody = document.getElementById("table-body-by-rank");
-
-            title.innerHTML = `Search Results - ${searchQuery} (${response['total']})`;
+            searchAuthorTitle = `Search Results - ${searchQuery} (${response['total']})`;
 
             response['data'].forEach(function (item) {
                 const row = document.createElement("tr");
@@ -350,7 +372,7 @@
             if (contactNames.length > 0) {
                 contactNameCell.textContent = contactNames[0];
             } else {
-                contactNameCell.textContent = "Contact Info";
+                contactNameCell.textContent = "Unknown contact info";
             }
 
             return contactNameCell;
@@ -358,7 +380,7 @@
         function createSearchAllResultTable(response) {
             const title = document.getElementById("searchTitle");
             const tableBody = document.getElementById("table-body-all-research");
-            title.innerHTML = `Search Results - ${searchQuery} (${response['total']})`;
+            searchAllTitle = `Search Results - ${searchQuery} (${response['total']})`;
 
             response['data'].forEach(function (item) {
                 const row = document.createElement('tr');
@@ -375,13 +397,16 @@
 
                 const conditionCell = document.createElement('td');
                 conditionCell.textContent = item.Condition;
-
                 const contactNameCell = createContactNameCell(item);
-
-                contactNameCell.style.cursor = 'pointer'; // Add cursor style for click interaction
-                contactNameCell.addEventListener('click', function () {
-                    displayContactPopup(item);
-                });
+                //  If contain contact info
+                if (
+                    contactNameCell.textContent !== "Unknown contact info"
+                ) {
+                    contactNameCell.style.cursor = 'pointer'; // Add cursor style for click interaction
+                    contactNameCell.addEventListener('click', function () {
+                        displayContactPopup(item);
+                    });
+                }
 
                 nctIdCell.appendChild(nctIdLink);
                 row.appendChild(rankCell);
@@ -494,6 +519,8 @@
                 investigatorFullName.textContent = 'Investigator: ' + item.ResponsiblePartyInvestigatorFullName;
             } else if (item.CentralContactName.length) {
                 investigatorFullName.textContent = 'Investigator: ' + item.CentralContactName;
+            } else if(item.OverallOfficialName.length){
+                investigatorFullName.textContent = 'Investigator: ' + item.OverallOfficialName;
             }
 
             investigatorTitle.textContent = item.ResponsiblePartyInvestigatorTitle.length ? 'Title: ' + item.ResponsiblePartyInvestigatorTitle : '';
@@ -518,7 +545,7 @@
             contactPopup.style.display = 'none';
         }
 
-        fetchAuthorByRank();
+        fetchAllResearch();
     </script>
 
 </body>

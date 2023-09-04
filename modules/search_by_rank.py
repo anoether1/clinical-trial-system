@@ -9,6 +9,8 @@ class SearchNih:
     def __init__(self, search_query: str, fields: str):
         self.searchQuery = search_query
         self.fields = fields
+        # The max search studies per request
+        self.max_search = 999
 
     def __filter_title(self, name: str) -> str:
         symbol_to_filter = [",", ".", ";", "/",  "!", "?", "*"]
@@ -20,7 +22,7 @@ class SearchNih:
 
         for title in text_to_filter:
             name = name.replace(title, "")
-        return name.strip().capitalize()
+        return name.strip()
 
     def author_title_handler(self, name_list: Set[str]) -> Set[str]:
         results = set()
@@ -35,9 +37,9 @@ class SearchNih:
     def search_all_researchs(self, total: int) -> List[ResearchInfoType]:
         output = []
         while total > 0:
-            if total >= 1000:
-                result = self.search_by_rank(total - 1000, total)
-                total -= 1000
+            if total >= self.max_search:
+                result = self.search_by_rank(total - self.max_search, total)
+                total -= self.max_search
             else:
                 result = self.search_by_rank(1, total)
                 total -= total
@@ -64,9 +66,9 @@ class SearchNih:
         calculate_result = {}
 
         while total > 0:
-            if total >= 1000:
-                result = self.search_by_rank(total - 1000, total)
-                total -= 1000
+            if total >= self.max_search:
+                result = self.search_by_rank(total - self.max_search, total)
+                total -= self.max_search
             else:
                 result = self.search_by_rank(1, total)
                 total -= total
