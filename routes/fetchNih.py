@@ -41,7 +41,8 @@ async def search_all_research(
     if not total:
         return JSONResponse({"message": "No study found"}, status_code=400)
     output = search_nih.search_all_researchs(total)
-    return {"data": output, "total": len(output)}
+    sorted_data = sorted(output, key=lambda x: x["Rank"])
+    return {"data": sorted_data, "total": len(sorted_data)}
 
 
 @router.get(
@@ -75,7 +76,6 @@ def searchByRank(
     calcaulate_result = search_nih.search_author_info(total)
 
     result = search_nih.get_calculate_author(calcaulate_result)
-
     # Remove dirty data
     # recover the following three lines
     result.pop("C c w", None)
@@ -83,4 +83,4 @@ def searchByRank(
     
     sorted_data = sorted(
         result.items(), key=lambda x: x[1]["count"], reverse=True)
-    return {"data": sorted_data, "total": total}
+    return {"data": sorted_data, "total": len(sorted_data)}
