@@ -76,10 +76,6 @@ def searchByRank(
     calcaulate_result = search_nih.search_author_info(total)
 
     result = search_nih.get_calculate_author(calcaulate_result)
-    # Remove dirty data
-    # recover the following three lines
-    result.pop("C C W", None)
-    result.pop("Study Contact", None)
     
     sorted_data = sorted(
         result.items(), key=lambda x: x[1]["count"], reverse=True)
