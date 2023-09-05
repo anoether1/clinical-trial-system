@@ -206,7 +206,7 @@
     <div id="searchButtons">
         <button id="searchAuthorContactByRankBtn" onclick="fetchAuthorByRank()" disabled>Search author contact by
             rank</button>
-        <button id="searchAllResultBtn" onclick="fetchAllResearch()">Search all research</button>
+        <button id="searchAllResultBtn" onclick="fetchAllResearch()" disabled>Search all research</button>
     </div>
     <div id="loadingOverlay">
         <div id="loadingIndicator">Loading...</div>
@@ -545,7 +545,7 @@
             contactPopup.style.display = 'none';
         }
 
-        fetchAllResearch();
+        fetchAuthorByRank();
     </script>
 
 </body>
