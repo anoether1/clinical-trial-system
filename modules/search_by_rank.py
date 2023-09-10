@@ -38,7 +38,7 @@ class SearchNih:
         output = []
         while total > 0:
             if total >= self.max_search:
-                result = self.search_by_rank(total - self.max_search, total)
+                result = self.search_by_rank(total - self.max_search+1, total)
                 total -= self.max_search
             else:
                 result = self.search_by_rank(1, total)
@@ -67,14 +67,13 @@ class SearchNih:
 
         while total > 0:
             if total >= self.max_search:
-                result = self.search_by_rank(total - self.max_search, total)
+                result = self.search_by_rank(total - self.max_search+1, total)
                 total -= self.max_search
             else:
                 result = self.search_by_rank(1, total)
                 total -= total
 
             for study_field in result["StudyFields"]:
-                # over_all_official_name = self.author_title_handler(set(study_field["OverallOfficialName"]))
                 central_contact_name = self.author_title_handler(
                     set(study_field["CentralContactName"]))
                 location_contact_name = self.author_title_handler(
