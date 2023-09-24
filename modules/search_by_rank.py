@@ -10,7 +10,7 @@ class SearchNih:
         self.searchQuery = search_query
         self.fields = fields
         # The max search studies per request
-        self.max_search = 999
+        self.max_search = 1000
 
     def __filter_title(self, name: str) -> str:
         symbol_to_filter = [",", ".", ";", "/",  "!", "?", "*"]
@@ -56,7 +56,7 @@ class SearchNih:
             "max_rnk": max_rnk,
         }
         url = "https://classic.clinicaltrials.gov/api/query/study_fields?"
-        response = requests.get(url, params=params, timeout=10)
+        response = requests.get(url, params=params, timeout=20)
 
         response.raise_for_status()
 
@@ -155,9 +155,9 @@ class SearchNih:
             "fields": "",
             "fmt": "json",
             "min_rnk": 1,
-            "max_rnk": 105,
+            "max_rnk": 101,
         }
         url = "https://classic.clinicaltrials.gov/api/query/study_fields?"
-        response = requests.get(url, params=params, timeout=30)
+        response = requests.get(url, params=params, timeout=60)
         response.raise_for_status()
         return (author, response.json()["StudyFieldsResponse"]["NStudiesReturned"])
