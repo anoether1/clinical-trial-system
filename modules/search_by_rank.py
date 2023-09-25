@@ -10,7 +10,7 @@ class SearchNih:
         self.searchQuery = search_query
         self.fields = fields
         # The max search studies per request
-        self.max_search = 999
+        self.max_search = 1000
 
     def __filter_title(self, name: str) -> str:
         symbol_to_filter = [",", ".", ";", "/",  "!", "?", "*"]
@@ -38,7 +38,7 @@ class SearchNih:
         output = []
         while total > 0:
             if total >= self.max_search:
-                result = self.search_by_rank(total - self.max_search, total)
+                result = self.search_by_rank(total - self.max_search+1, total)
                 total -= self.max_search
             else:
                 result = self.search_by_rank(1, total)
@@ -56,7 +56,7 @@ class SearchNih:
             "max_rnk": max_rnk,
         }
         url = "https://classic.clinicaltrials.gov/api/query/study_fields?"
-        response = requests.get(url, params=params, timeout=10)
+        response = requests.get(url, params=params, timeout=20)
 
         response.raise_for_status()
 
@@ -67,14 +67,13 @@ class SearchNih:
 
         while total > 0:
             if total >= self.max_search:
-                result = self.search_by_rank(total - self.max_search, total)
+                result = self.search_by_rank(total - self.max_search+1, total)
                 total -= self.max_search
             else:
                 result = self.search_by_rank(1, total)
                 total -= total
 
             for study_field in result["StudyFields"]:
-                # over_all_official_name = self.author_title_handler(set(study_field["OverallOfficialName"]))
                 central_contact_name = self.author_title_handler(
                     set(study_field["CentralContactName"]))
                 location_contact_name = self.author_title_handler(
@@ -156,9 +155,9 @@ class SearchNih:
             "fields": "",
             "fmt": "json",
             "min_rnk": 1,
-            "max_rnk": 105,
+            "max_rnk": 101,
         }
         url = "https://classic.clinicaltrials.gov/api/query/study_fields?"
-        response = requests.get(url, params=params, timeout=30)
+        response = requests.get(url, params=params, timeout=60)
         response.raise_for_status()
         return (author, response.json()["StudyFieldsResponse"]["NStudiesReturned"])
