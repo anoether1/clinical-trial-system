@@ -42,3 +42,10 @@ $ git push
 ```
 $ git reset --hard
 ```
+
+### How to deploy
+```
+$ git clone YOUR_PROJECT
+$ make image
+$ make prod
+```
